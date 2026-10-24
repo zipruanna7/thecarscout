@@ -201,6 +201,38 @@ footer{background:#061725;margin-top:0}
 @media(max-width:720px){.tabs{background:#fff;border-bottom:1px solid #e5e7eb}.tab{color:#344054}.hero{padding:54px 0}.hero:after{display:none}.wrap{padding:0 18px}}
 </style>
 
+<style id="cs-additions">
+.vsearch{padding:20px}
+.vsearch-grid{display:grid;grid-template-columns:1.1fr 1.1fr 1fr .8fr auto;gap:14px;align-items:end}
+.vsearch-go .btn{width:100%;white-space:nowrap}
+.cat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:18px}
+.cat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 10px;cursor:pointer;font-weight:700;font-size:15px;color:var(--navy);display:flex;flex-direction:column;align-items:center;gap:5px;transition:.14s;font-family:inherit}
+.cat:hover{border-color:var(--teal);box-shadow:0 10px 24px rgba(14,23,38,.08);transform:translateY(-2px)}
+.cat .cat-c{font-size:12px;font-weight:600;color:var(--muted)}
+.shop-filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:22px}
+.shop-filters input,.shop-filters select{max-width:200px}
+.shop-filters #invSearch{max-width:260px;flex:1 1 220px}
+.vcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:.15s;display:flex;flex-direction:column}
+.vcard:hover{transform:translateY(-3px);border-color:var(--teal);box-shadow:0 14px 34px rgba(14,23,38,.1)}
+.vcard-img{aspect-ratio:16/10;background:var(--body);display:grid;place-items:center;font-size:40px;color:var(--muted-d);overflow:hidden}
+.vcard-img img{width:100%;height:100%;object-fit:cover}
+.vcard-b{padding:15px 17px;display:flex;flex-direction:column;gap:8px;flex:1}
+.vcard-b h3{font-size:17px;line-height:1.2}
+.vchips{display:flex;flex-wrap:wrap;gap:6px}
+.vchip{font-size:12px;font-weight:600;color:var(--navy);background:var(--body);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+.vcard-price{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--line)}
+.vcard-price strong{font-size:20px;letter-spacing:-.02em}
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.nart{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:.15s;color:inherit;text-decoration:none}
+.nart:hover{transform:translateY(-3px);border-color:var(--teal);box-shadow:0 14px 34px rgba(14,23,38,.1)}
+.nart-img{aspect-ratio:16/9;background:var(--body) center/cover no-repeat;display:grid;place-items:center;color:var(--muted-d);font-size:28px}
+.nart-b{padding:15px 17px;display:flex;flex-direction:column;gap:7px;flex:1}
+.nart-meta{font-size:12px;color:var(--teal-d);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.nart h3{font-size:15.5px;line-height:1.28}
+.nart-src{margin-top:auto;font-size:12.5px;color:var(--muted);font-weight:600}
+@media(max-width:900px){.vsearch-grid{grid-template-columns:1fr 1fr}.cat-row{grid-template-columns:repeat(3,1fr)}.news-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.vsearch-grid{grid-template-columns:1fr}.cat-row{grid-template-columns:repeat(2,1fr)}.news-grid{grid-template-columns:1fr}.shop-filters input,.shop-filters select{max-width:none;flex:1 1 100%}}
+</style>
 </head>
 <body>
 
@@ -237,6 +269,27 @@ footer{background:#061725;margin-top:0}
       </div>
     </div>
   </div>
+  <div class="section" style="padding-top:44px">
+    <div class="wrap">
+      <div class="sec-head"><div class="k">Find your next vehicle</div><h2>Search our inventory</h2><p>Tell us what you're after — we'll match it to what's on the lot, or scout it for you.</p></div>
+      <div class="card vsearch">
+        <div class="vsearch-grid">
+          <div class="field"><label>Make</label><select id="hMake" onchange="onHMakeChange()"><option value="">Any make</option></select></div>
+          <div class="field"><label>Model</label><select id="hModel"><option value="">Any model</option></select></div>
+          <div class="field"><label>Price</label><select id="hPrice"><option value="">Any price</option><option value="0-10000">Under $10,000</option><option value="0-20000">Under $20,000</option><option value="20000-30000">$20k – $30k</option><option value="30000-40000">$30k – $40k</option><option value="40000-999999999">$40k+</option></select></div>
+          <div class="field"><label>ZIP Code</label><input id="hZip" inputmode="numeric" maxlength="5" placeholder="46037"></div>
+          <div class="field vsearch-go"><label>&nbsp;</label><button class="btn btn-lg" onclick="homeSearch()">Search Cars</button></div>
+        </div>
+      </div>
+      <div class="cat-row">
+        <button class="cat" onclick="browseCategory('suv')">SUVs<span class="cat-c" id="catc-suv"></span></button>
+        <button class="cat" onclick="browseCategory('sedan')">Sedans<span class="cat-c" id="catc-sedan"></span></button>
+        <button class="cat" onclick="browseCategory('truck')">Trucks<span class="cat-c" id="catc-truck"></span></button>
+        <button class="cat" onclick="browseCategory('luxury')">Luxury<span class="cat-c" id="catc-luxury"></span></button>
+        <button class="cat" onclick="browseCategory('under20')">Under $20k<span class="cat-c" id="catc-under20"></span></button>
+      </div>
+    </div>
+  </div>
   <div class="section">
     <div class="wrap">
       <div class="sec-head"><div class="k">What we do</div><h2>Everything you need for the next move</h2><p>Use the tool that fits where you are in the process. Your information stays connected to the same Car Scout experience.</p></div>
@@ -250,19 +303,31 @@ footer{background:#061725;margin-top:0}
       </div>
     </div>
   </div>
+  <div class="section alt">
+    <div class="wrap">
+      <div class="sec-head"><div class="k">Auto news</div><h2>The latest from the car world</h2><p>New releases, recalls, technology, and pricing trends — updated automatically.</p></div>
+      <div id="newsGrid" class="news-grid"><p class="note">Loading the latest automotive news…</p></div>
+      <div id="newsFallback" style="display:none;margin-top:8px"><p class="note">We couldn't load live news right now. <a href="https://www.motor1.com/news/" target="_blank" rel="noopener" style="color:var(--teal-d);font-weight:700">Browse the latest auto news →</a></p></div>
+    </div>
+  </div>
 </div>
 
 <!-- ============ SHOP (inventory feed) ============ -->
 <div class="page" id="page-shop">
   <div class="page-hero"><div class="wrap"><div class="eyebrow">Shop Cars</div><h1>Browse our inventory</h1><p>Browse freely — no sign-up. See a car you like? Click it and we'll get you the details.</p></div></div>
   <div class="section"><div class="wrap">
-    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:22px">
-      <input id="invSearch" placeholder="Search make, model, year…" style="max-width:360px" oninput="renderInv()">
-      <select id="invSort" onchange="renderInv()" style="max-width:200px"><option value="price">Price: Low to High</option><option value="price-d">Price: High to Low</option><option value="miles">Lowest Miles</option><option value="year-d">Newest Year</option></select>
+    <div class="shop-filters">
+      <input id="invSearch" placeholder="Search make, model, year…" oninput="renderInv()">
+      <select id="invMake" onchange="onInvMakeChange()"><option value="">All makes</option></select>
+      <select id="invModel" onchange="renderInv()"><option value="">All models</option></select>
+      <select id="invBody" onchange="window.__catFilter='';renderInv()"><option value="">All types</option><option>SUV</option><option>Sedan</option><option>Truck</option><option>Coupe</option><option>Van</option></select>
+      <select id="invPrice" onchange="window.__catFilter='';renderInv()"><option value="">Any price</option><option value="0-10000">Under $10k</option><option value="0-20000">Under $20k</option><option value="20000-30000">$20k–30k</option><option value="30000-40000">$30k–40k</option><option value="40000-999999999">$40k+</option></select>
+      <select id="invSort" onchange="renderInv()"><option value="price">Price: Low to High</option><option value="price-d">Price: High to Low</option><option value="miles">Lowest Miles</option><option value="year-d">Newest Year</option></select>
+      <button class="btn btn-ghost" onclick="clearInvFilters()">Clear</button>
       <span class="note" id="invCount"></span>
     </div>
     <div id="invGrid" class="tool-grid"></div>
-    <div id="invEmpty" class="card" style="text-align:center;display:none"><p class="note" style="font-size:15px">No vehicles match your search right now. Check back soon — inventory updates throughout the day.</p></div>
+    <div id="invEmpty" class="card" style="text-align:center;display:none"><p class="note" id="invEmptyMsg" style="font-size:15px">No vehicles match your search right now. Check back soon — inventory updates throughout the day.</p><button class="btn btn-lg" style="margin-top:14px" onclick="requestVehicleHelp()">Request help finding this vehicle</button></div>
   </div></div>
 </div>
 
@@ -538,44 +603,115 @@ function wire(kind){
 let INVENTORY=[];let invLoaded=false;
 async function loadInventory(){
   if(invLoaded)return; invLoaded=true;
-  const grid=document.getElementById('invGrid');grid.innerHTML='<p class="note">Loading inventory…</p>';
+  const grid=document.getElementById('invGrid'); if(grid)grid.innerHTML='<p class="note">Loading inventory…</p>';
   try{
+    if(!sb)throw new Error('client not loaded');
     const {data,error}=await sb.from('auto_inventory').select('*');
     if(error)throw error;
     INVENTORY=(data||[]).filter(v=>!v.status||v.status==='available');
   }catch(e){ console.error('inventory load failed',e); INVENTORY=[]; }
-  renderInv();
+  populateFilters(); updateCategoryCounts(); renderInv();
 }
 function invTitle(v){return [v.year,v.make,v.model,v.trim].filter(Boolean).join(' ');}
 function money(n){return (n||n===0)?'$'+Math.round(n).toLocaleString('en-US'):'Call for price';}
 function renderInv(){
   const grid=document.getElementById('invGrid');const empty=document.getElementById('invEmpty');const cnt=document.getElementById('invCount');
   if(!grid)return;
+  const g=function(id){var el=document.getElementById(id);return el?String(el.value||''):'';};
   let list=INVENTORY.slice();
-  const q=(document.getElementById('invSearch').value||'').toLowerCase().trim();
+  const q=g('invSearch').toLowerCase().trim();
   if(q)list=list.filter(v=>invTitle(v).toLowerCase().includes(q)||String(v.vin||'').toLowerCase().includes(q));
-  const sort=document.getElementById('invSort').value;
+  const mk=g('invMake'); if(mk)list=list.filter(v=>String(v.make||'').toLowerCase()===mk.toLowerCase());
+  const md=g('invModel'); if(md)list=list.filter(v=>String(v.model||'').toLowerCase()===md.toLowerCase());
+  const bd=g('invBody'); if(bd){var reB=new RegExp(bd==='Truck'?'truck|pickup':bd,'i');list=list.filter(v=>reB.test(String(v.body_style||'')));}
+  const pr=g('invPrice'); if(pr){var pp=pr.split('-').map(Number);list=list.filter(v=>v.price!=null&&v.price>=pp[0]&&v.price<=pp[1]);}
+  if(window.__catFilter==='luxury'){list=list.filter(v=>LUX.indexOf(String(v.make||'').toLowerCase())>-1||(v.price!=null&&v.price>=40000));}
+  const sort=g('invSort');
   list.sort((a,b)=>sort==='price'?(a.price||1e12)-(b.price||1e12):sort==='price-d'?(b.price||0)-(a.price||0):sort==='miles'?(a.mileage||1e12)-(b.mileage||1e12):(b.year||0)-(a.year||0));
-  cnt.textContent=INVENTORY.length?(list.length+' of '+INVENTORY.length+' vehicles'):'';
-  if(!list.length){grid.innerHTML='';empty.style.display='block';empty.querySelector('p').textContent=INVENTORY.length?'No vehicles match your search.':'Inventory is updating — check back shortly, or use any other tool above and we\'ll help you find the right car.';return;}
-  empty.style.display='none';
-  grid.innerHTML=list.map((v,i)=>{const idx=INVENTORY.indexOf(v);const photo=v.photo_url?`<img src="${v.photo_url}" alt="${invTitle(v)}" style="width:100%;height:170px;object-fit:cover" onerror="this.parentElement.innerHTML='🚗';this.parentElement.style.cssText+=';display:grid;place-items:center;font-size:40px;color:var(--muted-d)'">`:'🚗';
-    return `<div class="tool" style="padding:0;overflow:hidden" onclick="openCar(${idx})">
-      <div style="aspect-ratio:16/10;background:var(--body);display:grid;place-items:center;font-size:40px;color:var(--muted-d)">${photo}</div>
-      <div style="padding:16px 18px;display:flex;flex-direction:column;gap:4px;flex:1">
-        <h3 style="font-size:17px">${invTitle(v)||'Vehicle'}</h3>
-        <div class="note">${[v.mileage!=null?Number(v.mileage).toLocaleString()+' mi':'',v.exterior_color,v.body_style].filter(Boolean).join(' · ')}</div>
-        <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding-top:10px">
-          <strong style="font-size:18px">${money(v.price)}</strong><span class="go" style="padding:0">View →</span>
-        </div>
-      </div></div>`;}).join('');
+  if(cnt)cnt.textContent=INVENTORY.length?(list.length+' of '+INVENTORY.length+' vehicles'):'';
+  if(!list.length){grid.innerHTML='';if(empty){empty.style.display='block';var m=document.getElementById('invEmptyMsg');if(m)m.textContent=INVENTORY.length?'No vehicles match these filters yet — adjust your search, or let us scout it for you.':'Inventory is updating. Tell us what you want and we will find it for you.';}return;}
+  if(empty)empty.style.display='none';
+  grid.innerHTML=list.map(function(v){var idx=INVENTORY.indexOf(v);
+    var img=v.photo_url?'<img src="'+String(v.photo_url).replace(/"/g,'&quot;')+'" alt="vehicle" onerror="this.remove()">':'🚗';
+    var chips=[v.mileage!=null?Number(v.mileage).toLocaleString()+' mi':'',v.body_style,v.exterior_color].filter(Boolean).map(function(c){return '<span class="vchip">'+c+'</span>';}).join('');
+    return '<div class="vcard" onclick="openCar('+idx+')"><div class="vcard-img">'+img+'</div><div class="vcard-b"><h3>'+(invTitle(v)||'Vehicle')+'</h3><div class="vchips">'+chips+'</div><div class="vcard-price"><strong>'+money(v.price)+'</strong><span class="go" style="padding:0">View details →</span></div></div></div>';
+  }).join('');
 }
+var LUX=['mercedes','mercedes-benz','bmw','audi','lexus','acura','infiniti','cadillac','porsche','land rover','range rover','jaguar','volvo','genesis','tesla','lincoln','maserati','bentley','alfa romeo'];
+window.__catFilter='';
+function nesc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});}
+function distinctVals(arr){return Array.from(new Set(arr.filter(Boolean).map(function(x){return String(x);}))).sort(function(a,b){return a.localeCompare(b);});}
+function fillSelect(id,blank,vals){var sel=document.getElementById(id);if(!sel)return;var cur=sel.value;sel.innerHTML='<option value="">'+blank+'</option>'+vals.map(function(v){return '<option>'+nesc(v)+'</option>';}).join('');if(vals.indexOf(cur)>-1)sel.value=cur;}
+function fillModels(makeId,modelId,blank){var mkEl=document.getElementById(makeId);var mk=mkEl?mkEl.value:'';var models=distinctVals(INVENTORY.filter(function(v){return !mk||String(v.make||'').toLowerCase()===mk.toLowerCase();}).map(function(v){return v.model;}));fillSelect(modelId,blank,models);}
+function populateFilters(){var makes=distinctVals(INVENTORY.map(function(v){return v.make;}));fillSelect('hMake','Any make',makes);fillSelect('invMake','All makes',makes);fillModels('hMake','hModel','Any model');fillModels('invMake','invModel','All models');}
+function onHMakeChange(){fillModels('hMake','hModel','Any model');}
+function onInvMakeChange(){window.__catFilter='';fillModels('invMake','invModel','All models');renderInv();}
+function clearInvFilters(){window.__catFilter='';['invSearch','invMake','invModel','invBody','invPrice'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});fillModels('invMake','invModel','All models');renderInv();}
+function setSel(id,val){var el=document.getElementById(id);if(!el)return;var ok=Array.prototype.some.call(el.options,function(o){return o.value===val;});if(!ok&&val){var o=document.createElement('option');o.value=val;o.textContent=val;el.appendChild(o);}el.value=val;}
+function homeSearch(){
+  window.__catFilter='';
+  var mk=(document.getElementById('hMake')||{}).value||'';
+  var md=(document.getElementById('hModel')||{}).value||'';
+  var prc=(document.getElementById('hPrice')||{}).value||'';
+  window.__searchZip=((document.getElementById('hZip')||{}).value||'').trim();
+  var is=document.getElementById('invSearch'); if(is)is.value='';
+  setSel('invMake',mk); fillModels('invMake','invModel','All models'); setSel('invModel',md); setSel('invPrice',prc);
+  var ib=document.getElementById('invBody'); if(ib)ib.value='';
+  go('shop'); renderInv();
+  var sp=document.getElementById('page-shop'); if(sp)sp.scrollIntoView({block:'start'});
+}
+function browseCategory(cat){
+  window.__catFilter='';
+  ['invSearch','invMake','invModel','invBody','invPrice'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  if(cat==='suv')setSel('invBody','SUV');
+  else if(cat==='sedan')setSel('invBody','Sedan');
+  else if(cat==='truck')setSel('invBody','Truck');
+  else if(cat==='under20')setSel('invPrice','0-20000');
+  else if(cat==='luxury')window.__catFilter='luxury';
+  go('shop'); renderInv();
+  var sp=document.getElementById('page-shop'); if(sp)sp.scrollIntoView({block:'start'});
+}
+function updateCategoryCounts(){
+  var c={suv:0,sedan:0,truck:0,luxury:0,under20:0};
+  INVENTORY.forEach(function(v){var bs=String(v.body_style||'').toLowerCase();if(/suv/.test(bs))c.suv++;if(/sedan/.test(bs))c.sedan++;if(/truck|pickup/.test(bs))c.truck++;if(LUX.indexOf(String(v.make||'').toLowerCase())>-1||(v.price!=null&&v.price>=40000))c.luxury++;if(v.price!=null&&v.price<20000)c.under20++;});
+  Object.keys(c).forEach(function(k){var el=document.getElementById('catc-'+k);if(el)el.textContent=INVENTORY.length?(c[k]+' available'):'';});
+}
+function requestVehicleHelp(){
+  selectedCar=null;
+  var t=document.getElementById('cmTitle'); if(t)t.textContent='Let us find it for you';
+  var sub=document.getElementById('cmSub'); if(sub)sub.textContent='Tell us what you want and we will scout it, then follow up.';
+  var ph=document.getElementById('cmPhoto'); if(ph)ph.style.display='none';
+  var f=document.getElementById('form-car'); if(f){f.style.display='';f.reset();}
+  var ok=document.getElementById('ok-car'); if(ok)ok.style.display='none';
+  var mg=document.getElementById('msg-car'); if(mg)mg.className='msg';
+  document.getElementById('carModal').classList.remove('hidden');
+}
+/* ===== LIVE AUTO NEWS ===== */
+var newsLoaded=false;
+async function loadNews(){
+  var grid=document.getElementById('newsGrid'); if(!grid||newsLoaded)return; newsLoaded=true;
+  try{
+    var r=await fetch('/api/news',{headers:{'Accept':'application/json'}});
+    var j=await r.json();
+    if(!j||!j.items||!j.items.length)throw new Error('no items');
+    renderNews(j.items.slice(0,6), j.source);
+  }catch(e){ console.error('news load failed',e); grid.innerHTML=''; var fb=document.getElementById('newsFallback'); if(fb)fb.style.display='block'; newsLoaded=false; }
+}
+function newsImg(it){ return it.image||it.thumbnail||''; }
+function fmtNewsDate(s){try{var d=new Date(s);if(isNaN(d))return '';return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}catch(e){return '';}}
+function renderNews(items,feedTitle){
+  var grid=document.getElementById('newsGrid'); if(!grid)return;
+  grid.innerHTML=items.map(function(it){var img=newsImg(it);var src=it.author||feedTitle||'Auto News';var style=img?(' style="background-image:url(\''+String(img).replace(/'/g,'%27')+'\')"'):'';
+    return '<a class="nart" href="'+nesc(it.link)+'" target="_blank" rel="noopener"><div class="nart-img"'+style+'>'+(img?'':'🗞')+'</div><div class="nart-b"><div class="nart-meta">'+fmtNewsDate(it.pubDate)+'</div><h3>'+nesc(it.title)+'</h3><div class="nart-src">'+nesc(src)+' ↗</div></div></a>';
+  }).join('');
+}
+
 let selectedCar=null;
 function openCar(idx){
   const v=INVENTORY[idx];if(!v)return;selectedCar=v;
   document.getElementById('cmTitle').textContent=invTitle(v)||'Vehicle';
   document.getElementById('cmSub').textContent=[money(v.price),v.mileage!=null?Number(v.mileage).toLocaleString()+' mi':'',v.stock_number?'Stock #'+v.stock_number:'',v.vin?'VIN '+v.vin:''].filter(Boolean).join('  ·  ');
-  document.getElementById('cmPhoto').innerHTML=v.photo_url?`<img src="${v.photo_url}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent='🚗'">`:'🚗';
+  document.getElementById('cmPhoto').style.display='';document.getElementById('cmPhoto').innerHTML=v.photo_url?`<img src="${v.photo_url}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent='🚗'">`:'🚗';
   const f=document.getElementById('form-car');f.style.display='';f.reset();document.getElementById('ok-car').style.display='none';document.getElementById('msg-car').className='msg';
   document.getElementById('carModal').classList.remove('hidden');
 }
@@ -587,9 +723,10 @@ document.getElementById('form-car').addEventListener('submit',async(e)=>{
   if(!d.name){msg.className='msg err';msg.textContent='Please enter your name.';return;}
   if(!d.phone&&!d.email){msg.className='msg err';msg.textContent='Please add a phone or email so we can reach you.';return;}
   const v=selectedCar||{};
-  const payload={name:d.name,phone:d.phone,email:d.email,vehicle:invTitle(v),
-    lookingFor:'VEHICLE INQUIRY — '+[invTitle(v),v.stock_number&&'Stock #'+v.stock_number,v.vin&&'VIN '+v.vin,v.price&&money(v.price)].filter(Boolean).join(' · '),
-    message:d.note||''};
+  var lookingFor, vehStr='';
+  if(selectedCar){ vehStr=invTitle(v); lookingFor='VEHICLE INQUIRY — '+[invTitle(v),v.stock_number&&'Stock #'+v.stock_number,v.vin&&'VIN '+v.vin,v.price&&money(v.price)].filter(Boolean).join(' · '); }
+  else { var gg=function(id){var e=document.getElementById(id);return e&&e.value?e.value:'';}; var crit=[]; var mkc=gg('invMake')||gg('hMake'); var mdc=gg('invModel')||gg('hModel'); var prc=gg('invPrice')||gg('hPrice'); var zip=window.__searchZip||gg('hZip'); if(mkc)crit.push(mkc); if(mdc)crit.push(mdc); if(prc)crit.push('price '+prc.replace('-',' to ')); if(zip)crit.push('ZIP '+zip); lookingFor='SHOP REQUEST — '+(crit.join(' · ')||'help finding a vehicle'); }
+  const payload={name:d.name,phone:d.phone,email:d.email,vehicle:vehStr,lookingFor:lookingFor,message:d.note||''};
   const btn=e.target.querySelector('button[type=submit]');const lbl=btn.textContent;btn.disabled=true;btn.textContent='Sending…';
   try{ await sendLead('help',payload); e.target.style.display='none'; document.getElementById('ok-car').style.display='block'; }
   catch(err){ console.error(err);msg.className='msg err';msg.textContent='Something went wrong. Please try again or call us.'; }
@@ -635,6 +772,9 @@ document.getElementById('form-sell').addEventListener('submit',async(e)=>{
   function restart(){ clearInterval(timer); timer=setInterval(()=>window.tStep(1), 5000); }
   paint(); restart();
 })();
+/* initial data load (runs after all declarations are initialized) */
+try{ loadInventory(); }catch(e){ console.error(e); }
+try{ loadNews(); }catch(e){ console.error(e); }
 </script>
 </body>
 </html>
