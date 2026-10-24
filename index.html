@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Car Scout — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
+<title>The Car Scout v1.0 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -232,8 +232,25 @@ footer{background:#061725;margin-top:0}
 .nart-src{margin-top:auto;font-size:12.5px;color:var(--muted);font-weight:600}
 @media(max-width:900px){.vsearch-grid{grid-template-columns:1fr 1fr}.cat-row{grid-template-columns:repeat(3,1fr)}.news-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.vsearch-grid{grid-template-columns:1fr}.cat-row{grid-template-columns:repeat(2,1fr)}.news-grid{grid-template-columns:1fr}.shop-filters input,.shop-filters select{max-width:none;flex:1 1 100%}}
+.guide-group{font-size:14px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-d);font-weight:800;margin:26px 0 12px}
+.guide-group:first-of-type{margin-top:6px}
+.guide-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gcard{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:15px 16px;cursor:pointer;display:flex;flex-direction:column;gap:5px;transition:.14s;font-family:inherit}
+.gcard:hover{border-color:var(--teal);box-shadow:0 10px 24px rgba(14,23,38,.08);transform:translateY(-2px)}
+.gcard-t{font-weight:700;font-size:14.5px;color:var(--navy);line-height:1.22}
+.gcard-m{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.gcard-go{margin-top:4px;font-size:12.5px;color:var(--teal-d);font-weight:700}
+.gitem{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.gitem:last-child{border-bottom:none}
+.gitem-img{flex:0 0 96px;width:96px;height:66px;border-radius:8px;background:var(--body) center/cover no-repeat;display:grid;place-items:center;color:var(--muted-d);font-size:22px}
+.gitem-b{flex:1;min-width:0}
+.gitem-b h4{font-size:14.5px;line-height:1.3;margin-bottom:4px}
+.gitem-meta{font-size:12px;color:var(--muted);font-weight:600}
+@media(max-width:900px){.guide-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.guide-grid{grid-template-columns:1fr}.gitem-img{flex-basis:76px;width:76px;height:54px}}
 </style>
 </head>
+<!-- The Car Scout — Build v1.0 -->
 <body>
 
 <header>
@@ -305,9 +322,12 @@ footer{background:#061725;margin-top:0}
   </div>
   <div class="section alt">
     <div class="wrap">
-      <div class="sec-head"><div class="k">Auto news</div><h2>The latest from the car world</h2><p>New releases, recalls, technology, and pricing trends — updated automatically.</p></div>
-      <div id="newsGrid" class="news-grid"><p class="note">Loading the latest automotive news…</p></div>
-      <div id="newsFallback" style="display:none;margin-top:8px"><p class="note">We couldn't load live news right now. <a href="https://www.motor1.com/news/" target="_blank" rel="noopener" style="color:var(--teal-d);font-weight:700">Browse the latest auto news →</a></p></div>
+      <div class="sec-head"><div class="k">Rankings &amp; buying guide</div><h2>Which cars are winning in 2026</h2><p>Best-selling, fastest-selling, and most-reliable rankings from credible automotive sources. Pick a category to read the latest published research.</p></div>
+      <h3 class="guide-group">General Vehicles</h3>
+      <div class="guide-grid" id="guideGeneral"></div>
+      <h3 class="guide-group">Luxury Vehicles</h3>
+      <div class="guide-grid" id="guideLuxury"></div>
+      <p class="note" style="margin-top:16px">Reporting year 2026 · Rankings and figures are published by the linked sources — open a category for the latest research and dates. We never publish made-up lists.</p>
     </div>
   </div>
 </div>
@@ -351,6 +371,17 @@ footer{background:#061725;margin-top:0}
       <div class="msg" id="msg-car"></div>
     </form>
     <div class="ok-panel" id="ok-car" style="padding:24px 10px"><div class="big">✓</div><h3>We're on it!</h3><p>We'll confirm this vehicle's availability and reach out right away.</p><button class="btn btn-ghost" onclick="closeCar()">Done</button></div>
+  </div>
+</div>
+
+<!-- rankings & buying guide modal -->
+<div id="guideModal" class="hidden" style="position:fixed;inset:0;z-index:100;background:rgba(14,23,38,.6);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto">
+  <div class="card" style="max-width:720px;width:100%" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+      <div><div class="eyebrow" id="gmMetric" style="color:var(--teal-d)"></div><h3 id="gmTitle" style="font-size:22px;margin-top:4px"></h3><div class="note" id="gmSub" style="margin-top:4px"></div></div>
+      <button onclick="closeGuide()" style="background:none;border:none;font-size:26px;cursor:pointer;color:var(--muted)">×</button>
+    </div>
+    <div id="gmBody" style="margin-top:14px"></div>
   </div>
 </div>
 
@@ -706,6 +737,57 @@ function renderNews(items,feedTitle){
   }).join('');
 }
 
+var GUIDE=[
+ {k:'fastest-cars',t:'Fastest-Selling Cars This Year',m:'fastest',g:'general'},
+ {k:'reliable-cars',t:'Most Reliable Cars of 2026',m:'reliable',g:'general'},
+ {k:'best-small',t:'Best-Selling Small Cars',m:'best',g:'general'},
+ {k:'best-midsize',t:'Best-Selling Midsize Cars',m:'best',g:'general'},
+ {k:'best-midsuv',t:'Best-Selling Midsize SUVs',m:'best',g:'general'},
+ {k:'best-fullsuv',t:'Best-Selling Full-Size SUVs',m:'best',g:'general'},
+ {k:'best-smalltruck',t:'Best-Selling Small/Midsize Trucks',m:'best',g:'general'},
+ {k:'best-fulltruck',t:'Best-Selling Full-Size Trucks',m:'best',g:'general'},
+ {k:'lux-fastest',t:'Fastest-Selling Luxury Cars',m:'fastest',g:'luxury'},
+ {k:'lux-reliable',t:'Most Reliable Luxury Cars of 2026',m:'reliable',g:'luxury'},
+ {k:'lux-small',t:'Best-Selling Luxury Small Cars',m:'best',g:'luxury'},
+ {k:'lux-midsize',t:'Best-Selling Luxury Midsize Cars',m:'best',g:'luxury'},
+ {k:'lux-midsuv',t:'Best-Selling Luxury Midsize SUVs',m:'best',g:'luxury'},
+ {k:'lux-fullsuv',t:'Best-Selling Luxury Full-Size SUVs',m:'best',g:'luxury'},
+ {k:'lux-smalltruck',t:'Best-Selling Luxury Small/Midsize Trucks',m:'best',g:'luxury'},
+ {k:'lux-fulltruck',t:'Best-Selling Luxury Full-Size Trucks',m:'best',g:'luxury'}
+];
+var METRIC_LABEL={fastest:'Fastest-selling · days to sell',best:'Best-selling · sales volume',reliable:'Most reliable · reliability studies'};
+function buildGuide(){
+  var gen=document.getElementById('guideGeneral'), lux=document.getElementById('guideLuxury'); if(!gen||!lux)return;
+  function card(x){return '<button class="gcard" onclick="openGuide(\''+x.k+'\')"><span class="gcard-t">'+nesc(x.t)+'</span><span class="gcard-m">'+METRIC_LABEL[x.m]+'</span><span class="gcard-go">View rankings →</span></button>';}
+  gen.innerHTML=GUIDE.filter(function(x){return x.g==='general';}).map(card).join('');
+  lux.innerHTML=GUIDE.filter(function(x){return x.g==='luxury';}).map(card).join('');
+  var modal=document.getElementById('guideModal'); if(modal && !modal.__wired){ modal.__wired=true; modal.addEventListener('click',closeGuide); }
+}
+async function openGuide(cat){
+  var modal=document.getElementById('guideModal'); if(!modal)return;
+  var meta=GUIDE.filter(function(x){return x.k===cat;})[0]||{};
+  document.getElementById('gmMetric').textContent=METRIC_LABEL[meta.m]||'';
+  document.getElementById('gmTitle').textContent=meta.t||'Rankings';
+  document.getElementById('gmSub').textContent='Reporting year 2026';
+  document.getElementById('gmBody').innerHTML='<p class="note">Loading the latest published rankings…</p>';
+  modal.classList.remove('hidden');
+  try{
+    var r=await fetch('/api/news?cat='+encodeURIComponent(cat)); var j=await r.json();
+    renderGuide(j, meta);
+  }catch(e){ console.error('guide load failed',e); document.getElementById('gmBody').innerHTML='<p class="note">We could not load rankings right now. Please try again shortly.</p>'; }
+}
+function closeGuide(){var m=document.getElementById('guideModal'); if(m)m.classList.add('hidden');}
+function renderGuide(j, meta){
+  var body=document.getElementById('gmBody'); if(!body)return;
+  if(!j||!j.items||!j.items.length){ body.innerHTML='<p class="note">No current published ranking is available for this category right now. We only show verified sources — never a made-up list. Check back soon, or <a href="#" onclick="closeGuide();requestVehicleHelp();return false;" style="color:var(--teal-d);font-weight:700">ask us to help you research it</a>.</p>'; return; }
+  var upd=j.updated?('Updated '+fmtNewsDate(j.updated)):'';
+  var sub=document.getElementById('gmSub'); if(sub)sub.textContent='Reporting year '+(j.year||2026)+(upd?(' · '+upd):'');
+  body.innerHTML='<p class="note" style="margin-bottom:10px">Latest published rankings &amp; research from credible automotive sources. Open any article for the full list and figures.</p>'+
+   j.items.map(function(it){var img=it.image?(' style="background-image:url(\''+String(it.image).replace(/'/g,'%27')+'\')"'):'';
+     return '<a class="gitem" href="'+nesc(it.link)+'" target="_blank" rel="noopener"><div class="gitem-img"'+img+'>'+(it.image?'':'📰')+'</div><div class="gitem-b"><h4>'+nesc(it.title)+'</h4><div class="gitem-meta">'+nesc(it.source||'Source')+(it.pubDate?(' · '+fmtNewsDate(it.pubDate)):'')+' ↗</div></div></a>';
+   }).join('');
+}
+
 let selectedCar=null;
 function openCar(idx){
   const v=INVENTORY[idx];if(!v)return;selectedCar=v;
@@ -774,7 +856,7 @@ document.getElementById('form-sell').addEventListener('submit',async(e)=>{
 })();
 /* initial data load (runs after all declarations are initialized) */
 try{ loadInventory(); }catch(e){ console.error(e); }
-try{ loadNews(); }catch(e){ console.error(e); }
+try{ buildGuide(); }catch(e){ console.error(e); }
 </script>
 </body>
 </html>
