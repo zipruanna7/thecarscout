@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Car Scout v1.0 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
+<title>The Car Scout v1.3 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -250,7 +250,7 @@ footer{background:#061725;margin-top:0}
 @media(max-width:560px){.guide-grid{grid-template-columns:1fr}.gitem-img{flex-basis:76px;width:76px;height:54px}}
 </style>
 </head>
-<!-- The Car Scout — Build v1.0 -->
+<!-- The Car Scout — Build v1.3 -->
 <body>
 
 <header>
@@ -297,6 +297,7 @@ footer{background:#061725;margin-top:0}
           <div class="field"><label>ZIP Code</label><input id="hZip" inputmode="numeric" maxlength="5" placeholder="46037"></div>
           <div class="field vsearch-go"><label>&nbsp;</label><button class="btn btn-lg" onclick="homeSearch()">Search Cars</button></div>
         </div>
+        <p class="note" style="margin-top:12px">Search filters our live inventory by make, model, and price. ZIP is not an inventory filter — we use it to scout options and follow up with you locally.</p>
       </div>
       <div class="cat-row">
         <button class="cat" onclick="browseCategory('suv')">SUVs<span class="cat-c" id="catc-suv"></span></button>
@@ -322,7 +323,7 @@ footer{background:#061725;margin-top:0}
   </div>
   <div class="section alt">
     <div class="wrap">
-      <div class="sec-head"><div class="k">Rankings &amp; buying guide</div><h2>Which cars are winning in 2026</h2><p>Best-selling, fastest-selling, and most-reliable rankings from credible automotive sources. Pick a category to read the latest published research.</p></div>
+      <div class="sec-head"><div class="k">Rankings &amp; buying guide</div><h2>Which cars are winning in 2026</h2><p>Best-selling, fastest-selling, and most-reliable coverage from credible automotive news sources. Pick a category to read the latest published articles and research.</p></div>
       <h3 class="guide-group">General Vehicles</h3>
       <div class="guide-grid" id="guideGeneral"></div>
       <h3 class="guide-group">Luxury Vehicles</h3>
@@ -597,15 +598,28 @@ const TOOLS={
 };
 function validateCreditApp(form){
   var req=['firstName','lastName','phone','email','dob','ssn','driversLicense','currentStreet','currentCity','currentState','zip','rentOrHomeowner','rentMortgageAmount','yearsCurrentAddress','monthsCurrentAddress','employerName','jobTitle','employerCity','employerState','employerZip','workNumber','monthlyIncome','yearsCurrentJob','monthsCurrentJob','downPayment'];
-  var val=function(n){var el=form.querySelector('[name=\"'+n+'\"]');return el?String(el.value).trim():'';};
+  var val=function(n){var el=form.querySelector('[name="'+n+'"]');return el?String(el.value).trim():'';};
   var addrYrs=(parseFloat(val('yearsCurrentAddress'))||0)+((parseFloat(val('monthsCurrentAddress'))||0)/12);
   var jobYrs=(parseFloat(val('yearsCurrentJob'))||0)+((parseFloat(val('monthsCurrentJob'))||0)/12);
   if(addrYrs<2){ req=req.concat(['previousAddress','yearsPreviousAddress','monthsPreviousAddress']); }
   if(jobYrs<2){ req=req.concat(['previousEmployment','previousYearsLastJob','previousMonthsLastJob']); }
   form.querySelectorAll('.field-err').forEach(function(el){ el.classList.remove('field-err'); });
-  var missing=[];
-  req.forEach(function(n){ var el=form.querySelector('[name=\"'+n+'\"]'); if(!el)return; if(String(el.value).trim()===''){ el.classList.add('field-err'); missing.push(el); } });
-  return missing;
+  var problems=[];
+  // 1) required-blank
+  req.forEach(function(n){ var el=form.querySelector('[name="'+n+'"]'); if(!el)return; if(String(el.value).trim()===''){ el.classList.add('field-err'); problems.push({el:el, msg:'Please complete all required fields'}); } });
+  // 2) format checks (only on filled fields)
+  function check(n, ok, msg){ var el=form.querySelector('[name="'+n+'"]'); if(!el)return; var v=String(el.value).trim(); if(v!=='' && !ok(v)){ if(el.className.indexOf('field-err')<0)el.classList.add('field-err'); problems.push({el:el, msg:msg}); } }
+  check('email', function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }, 'Enter a valid email address');
+  check('ssn', function(v){ return /^\d{3}[- ]?\d{2}[- ]?\d{4}$/.test(v); }, 'Enter a valid 9-digit SSN');
+  check('zip', function(v){ return /^\d{5}$/.test(v); }, 'ZIP must be 5 digits');
+  check('employerZip', function(v){ return /^\d{5}$/.test(v); }, 'Employer ZIP must be 5 digits');
+  check('phone', function(v){ var d=v.replace(/\D/g,''); return d.length===10||(d.length===11&&d.charAt(0)==='1'); }, 'Enter a valid 10-digit phone');
+  check('workNumber', function(v){ var d=v.replace(/\D/g,''); return d.length===10||(d.length===11&&d.charAt(0)==='1'); }, 'Enter a valid 10-digit work number');
+  check('dob', function(v){ var d=new Date(v); if(isNaN(d.getTime()))return false; var age=(Date.now()-d.getTime())/31557600000; return age>=18 && age<=120; }, 'Enter a valid date of birth (18+)');
+  ['monthsCurrentAddress','monthsPreviousAddress','monthsCurrentJob','previousMonthsLastJob'].forEach(function(n){ check(n, function(v){ var x=Number(v); return isFinite(x) && x>=0 && x<=11 && String(v).indexOf('.')<0; }, 'Months must be a whole number 0–11'); });
+  ['yearsCurrentAddress','yearsPreviousAddress','yearsCurrentJob','previousYearsLastJob'].forEach(function(n){ check(n, function(v){ return /^\d{1,2}$/.test(v); }, 'Years must be a whole number'); });
+  ['rentMortgageAmount','monthlyIncome','downPayment'].forEach(function(n){ check(n, function(v){ var c=String(v).replace(/[,$\s]/g,''); return /^\d+(\.\d{1,2})?$/.test(c); }, 'Enter a valid dollar amount'); });
+  return problems;
 }
 function wire(kind){
   const form=document.getElementById('form-'+kind);const cfg=TOOLS[kind];
@@ -614,8 +628,8 @@ function wire(kind){
     const msg=document.getElementById('msg-'+kind);msg.className='msg';msg.textContent='';
     const data=collect(form);
     if(kind==='financing'){
-      var _miss=validateCreditApp(form);
-      if(_miss.length){ msg.className='msg err'; msg.textContent='Please complete all required fields — '+_miss.length+' still needed.'; _miss[0].scrollIntoView({behavior:'smooth',block:'center'}); try{_miss[0].focus({preventScroll:true});}catch(e){} return; }
+      var _probs=validateCreditApp(form);
+      if(_probs.length){ var _fm=_probs[0].msg||'Please complete all required fields'; msg.className='msg err'; msg.textContent=_probs.length>1?(_fm+' — '+_probs.length+' field(s) need attention.'):(_fm+'.'); _probs[0].el.scrollIntoView({behavior:'smooth',block:'center'}); try{_probs[0].el.focus({preventScroll:true});}catch(e){} return; }
     } else {
       if(!data.phone && !data.email){msg.className='msg err';msg.textContent='Please add a phone number or email so we can reach you.';return;}
       if(!(data.name||data.firstName)){msg.className='msg err';msg.textContent='Please enter your name.';return;}
@@ -639,10 +653,11 @@ async function loadInventory(){
     if(!sb)throw new Error('client not loaded');
     const {data,error}=await sb.from('auto_inventory').select('*');
     if(error)throw error;
-    INVENTORY=(data||[]).filter(v=>!v.status||v.status==='available');
-  }catch(e){ console.error('inventory load failed',e); INVENTORY=[]; }
+    INVENTORY=(data||[]).filter(v=>!v.status||v.status==='available'); window.__invError=false;
+  }catch(e){ console.error('inventory load failed',e); INVENTORY=[]; window.__invError=true; }
   populateFilters(); updateCategoryCounts(); renderInv();
 }
+function retryInventory(){ invLoaded=false; window.__invError=false; loadInventory(); }
 function invTitle(v){return [v.year,v.make,v.model,v.trim].filter(Boolean).join(' ');}
 function money(n){return (n||n===0)?'$'+Math.round(n).toLocaleString('en-US'):'Call for price';}
 function renderInv(){
@@ -656,11 +671,11 @@ function renderInv(){
   const md=g('invModel'); if(md)list=list.filter(v=>String(v.model||'').toLowerCase()===md.toLowerCase());
   const bd=g('invBody'); if(bd){var reB=new RegExp(bd==='Truck'?'truck|pickup':bd,'i');list=list.filter(v=>reB.test(String(v.body_style||'')));}
   const pr=g('invPrice'); if(pr){var pp=pr.split('-').map(Number);list=list.filter(v=>v.price!=null&&v.price>=pp[0]&&v.price<=pp[1]);}
-  if(window.__catFilter==='luxury'){list=list.filter(v=>LUX.indexOf(String(v.make||'').toLowerCase())>-1||(v.price!=null&&v.price>=40000));}
+  if(window.__catFilter==='luxury'){list=list.filter(v=>LUX.indexOf(String(v.make||'').toLowerCase())>-1);}
   const sort=g('invSort');
   list.sort((a,b)=>sort==='price'?(a.price||1e12)-(b.price||1e12):sort==='price-d'?(b.price||0)-(a.price||0):sort==='miles'?(a.mileage||1e12)-(b.mileage||1e12):(b.year||0)-(a.year||0));
   if(cnt)cnt.textContent=INVENTORY.length?(list.length+' of '+INVENTORY.length+' vehicles'):'';
-  if(!list.length){grid.innerHTML='';if(empty){empty.style.display='block';var m=document.getElementById('invEmptyMsg');if(m)m.textContent=INVENTORY.length?'No vehicles match these filters yet — adjust your search, or let us scout it for you.':'Inventory is updating. Tell us what you want and we will find it for you.';}return;}
+  if(!list.length){grid.innerHTML='';if(empty){empty.style.display='block';var m=document.getElementById('invEmptyMsg');if(m){ if(window.__invError){ m.innerHTML='We\'re having trouble loading inventory right now. <a href="#" onclick="retryInventory();return false;" style="color:var(--teal-d);font-weight:700">Try again</a>.'; } else if(INVENTORY.length){ m.textContent='No vehicles match these filters yet \u2014 adjust your search, or let us scout it for you.'; } else { m.textContent='Inventory is updating. Tell us what you want and we will find it for you.'; } }}return;}
   if(empty)empty.style.display='none';
   grid.innerHTML=list.map(function(v){var idx=INVENTORY.indexOf(v);
     var img=v.photo_url?'<img src="'+String(v.photo_url).replace(/"/g,'&quot;')+'" alt="vehicle" onerror="this.remove()">':'🚗';
@@ -668,7 +683,7 @@ function renderInv(){
     return '<div class="vcard" onclick="openCar('+idx+')"><div class="vcard-img">'+img+'</div><div class="vcard-b"><h3>'+(invTitle(v)||'Vehicle')+'</h3><div class="vchips">'+chips+'</div><div class="vcard-price"><strong>'+money(v.price)+'</strong><span class="go" style="padding:0">View details →</span></div></div></div>';
   }).join('');
 }
-var LUX=['mercedes','mercedes-benz','bmw','audi','lexus','acura','infiniti','cadillac','porsche','land rover','range rover','jaguar','volvo','genesis','tesla','lincoln','maserati','bentley','alfa romeo'];
+var LUX=['mercedes','mercedes-benz','bmw','audi','lexus','acura','infiniti','cadillac','porsche','land rover','range rover','jaguar','volvo','genesis','tesla','lincoln','maserati','bentley','alfa romeo','rolls-royce','ferrari','lamborghini','aston martin','mclaren','polestar','lucid','rivian','lotus'];
 window.__catFilter='';
 function nesc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});}
 function distinctVals(arr){return Array.from(new Set(arr.filter(Boolean).map(function(x){return String(x);}))).sort(function(a,b){return a.localeCompare(b);});}
@@ -704,7 +719,7 @@ function browseCategory(cat){
 }
 function updateCategoryCounts(){
   var c={suv:0,sedan:0,truck:0,luxury:0,under20:0};
-  INVENTORY.forEach(function(v){var bs=String(v.body_style||'').toLowerCase();if(/suv/.test(bs))c.suv++;if(/sedan/.test(bs))c.sedan++;if(/truck|pickup/.test(bs))c.truck++;if(LUX.indexOf(String(v.make||'').toLowerCase())>-1||(v.price!=null&&v.price>=40000))c.luxury++;if(v.price!=null&&v.price<20000)c.under20++;});
+  INVENTORY.forEach(function(v){var bs=String(v.body_style||'').toLowerCase();if(/suv/.test(bs))c.suv++;if(/sedan/.test(bs))c.sedan++;if(/truck|pickup/.test(bs))c.truck++;if(LUX.indexOf(String(v.make||'').toLowerCase())>-1)c.luxury++;if(v.price!=null&&v.price<20000)c.under20++;});
   Object.keys(c).forEach(function(k){var el=document.getElementById('catc-'+k);if(el)el.textContent=INVENTORY.length?(c[k]+' available'):'';});
 }
 function requestVehicleHelp(){
@@ -758,7 +773,7 @@ var GUIDE=[
 var METRIC_LABEL={fastest:'Fastest-selling · days to sell',best:'Best-selling · sales volume',reliable:'Most reliable · reliability studies'};
 function buildGuide(){
   var gen=document.getElementById('guideGeneral'), lux=document.getElementById('guideLuxury'); if(!gen||!lux)return;
-  function card(x){return '<button class="gcard" onclick="openGuide(\''+x.k+'\')"><span class="gcard-t">'+nesc(x.t)+'</span><span class="gcard-m">'+METRIC_LABEL[x.m]+'</span><span class="gcard-go">View rankings →</span></button>';}
+  function card(x){return '<button class="gcard" onclick="openGuide(\''+x.k+'\')"><span class="gcard-t">'+nesc(x.t)+'</span><span class="gcard-m">'+METRIC_LABEL[x.m]+'</span><span class="gcard-go">See latest coverage →</span></button>';}
   gen.innerHTML=GUIDE.filter(function(x){return x.g==='general';}).map(card).join('');
   lux.innerHTML=GUIDE.filter(function(x){return x.g==='luxury';}).map(card).join('');
   var modal=document.getElementById('guideModal'); if(modal && !modal.__wired){ modal.__wired=true; modal.addEventListener('click',closeGuide); }
@@ -779,10 +794,10 @@ async function openGuide(cat){
 function closeGuide(){var m=document.getElementById('guideModal'); if(m)m.classList.add('hidden');}
 function renderGuide(j, meta){
   var body=document.getElementById('gmBody'); if(!body)return;
-  if(!j||!j.items||!j.items.length){ body.innerHTML='<p class="note">No current published ranking is available for this category right now. We only show verified sources — never a made-up list. Check back soon, or <a href="#" onclick="closeGuide();requestVehicleHelp();return false;" style="color:var(--teal-d);font-weight:700">ask us to help you research it</a>.</p>'; return; }
+  if(!j||!j.items||!j.items.length){ body.innerHTML='<p class="note">No current published ranking is available for this category right now. We only pull from live automotive news sources, and never show a made-up list. Check back soon, or <a href="#" onclick="closeGuide();requestVehicleHelp();return false;" style="color:var(--teal-d);font-weight:700">ask us to help you research it</a>.</p>'; return; }
   var upd=j.updated?('Updated '+fmtNewsDate(j.updated)):'';
   var sub=document.getElementById('gmSub'); if(sub)sub.textContent='Reporting year '+(j.year||2026)+(upd?(' · '+upd):'');
-  body.innerHTML='<p class="note" style="margin-bottom:10px">Latest published rankings &amp; research from credible automotive sources. Open any article for the full list and figures.</p>'+
+  body.innerHTML='<p class="note" style="margin-bottom:10px">Latest articles and research on this topic from automotive news sources. Each source reports its own ranking — open an article to see the list, figures, and reporting date. These are source articles, not a single verified ranking.</p>'+
    j.items.map(function(it){var img=it.image?(' style="background-image:url(\''+String(it.image).replace(/'/g,'%27')+'\')"'):'';
      return '<a class="gitem" href="'+nesc(it.link)+'" target="_blank" rel="noopener"><div class="gitem-img"'+img+'>'+(it.image?'':'📰')+'</div><div class="gitem-b"><h4>'+nesc(it.title)+'</h4><div class="gitem-meta">'+nesc(it.source||'Source')+(it.pubDate?(' · '+fmtNewsDate(it.pubDate)):'')+' ↗</div></div></a>';
    }).join('');
