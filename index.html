@@ -82,7 +82,7 @@ header{position:sticky;top:0;z-index:50;background:var(--navy);border-bottom:1px
 .field{display:flex;flex-direction:column;gap:6px}
 .field.full{grid-column:1/-1}
 label{font-size:13px;font-weight:600}
-label .req{color:var(--teal-d)}
+label .req{color:#d92d20}
 input,select,textarea{font-family:inherit;font-size:15px;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--surface);width:100%;transition:.12s;color:var(--ink)}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
 textarea{resize:vertical;min-height:90px}
@@ -92,6 +92,7 @@ textarea{resize:vertical;min-height:90px}
 .note{font-size:12.5px;color:var(--muted)}
 .msg{display:none;padding:13px 16px;border-radius:10px;font-size:14px;font-weight:600;margin-top:16px}
 .msg.err{display:block;background:#FEF2F2;color:#b42318;border:1px solid #f4b5ad}
+.field-err{border-color:#d92d20 !important;box-shadow:0 0 0 3px rgba(217,45,32,.14) !important}
 .ok-panel{display:none;text-align:center;padding:34px 10px}
 .ok-panel .big{font-size:50px;margin-bottom:10px}
 .ok-panel h3{font-size:24px;margin-bottom:8px}
@@ -191,7 +192,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;box-shadow:none}
 .card{border:1px solid #e1e5e9;border-radius:8px;box-shadow:none}
 input,select,textarea{border-radius:6px;border-color:#d0d5dd;padding:12px 13px}
 input:focus,select:focus,textarea:focus{border-color:#667085;box-shadow:0 0 0 3px #f2f4f7}
-label .req{color:#b54708}
+label .req{color:#d92d20}
 .calc-out{background:var(--navy);border-radius:8px}.calc-out .big{color:#fff}
 input[type=range]{accent-color:var(--navy)}
 .faq-item{border-radius:6px}
@@ -381,38 +382,38 @@ footer{background:#061725;margin-top:0}
         <div class="field"><label>Last Name <span class="req">*</span></label><input name="lastName" required></div>
         <div class="field"><label>Phone <span class="req">*</span></label><input name="phone" type="tel" placeholder="(317) 555-0100"></div>
         <div class="field"><label>Email <span class="req">*</span></label><input name="email" type="email" placeholder="you@email.com"></div>
-        <div class="field"><label>Date of Birth</label><input name="dob" type="date"></div>
-        <div class="field"><label>Social Security Number</label><input name="ssn" inputmode="numeric" placeholder="XXX-XX-XXXX" autocomplete="off"></div>
-        <div class="field"><label>Driver's License / ID</label><input name="driversLicense"></div>
+        <div class="field"><label>Date of Birth <span class="req">*</span></label><input name="dob" type="date"></div>
+        <div class="field"><label>Social Security Number <span class="req">*</span></label><input name="ssn" inputmode="numeric" placeholder="XXX-XX-XXXX" autocomplete="off"></div>
+        <div class="field"><label>Driver's License / ID <span class="req">*</span></label><select name="driversLicense" required><option value="">Select ID Type</option><option>Driver's License</option><option>State ID</option><option>Passport</option><option>Other</option></select></div>
         <div class="sub">Current Address</div>
-        <div class="field full"><label>Street Address</label><input name="currentStreet"></div>
-        <div class="field"><label>City</label><input name="currentCity"></div>
-        <div class="field"><label>State</label><input name="currentState"></div>
-        <div class="field"><label>Zip Code</label><input name="zip" inputmode="numeric"></div>
-        <div class="field"><label>Rent or Homeowner</label><select name="rentOrHomeowner"><option value="">Select…</option><option>Rent</option><option>Homeowner</option><option>Other</option></select></div>
-        <div class="field"><label>Rent / Mortgage Amount</label><input name="rentMortgageAmount" inputmode="decimal" placeholder="$ / month"></div>
-        <div class="field"><label>Years at Current Address</label><input name="yearsCurrentAddress" inputmode="numeric"></div>
-        <div class="field"><label>Months at Current Address</label><input name="monthsCurrentAddress" inputmode="numeric"></div>
+        <div class="field full"><label>Street Address <span class="req">*</span></label><input name="currentStreet"></div>
+        <div class="field"><label>City <span class="req">*</span></label><input name="currentCity"></div>
+        <div class="field"><label>State <span class="req">*</span></label><input name="currentState"></div>
+        <div class="field"><label>Zip Code <span class="req">*</span></label><input name="zip" inputmode="numeric"></div>
+        <div class="field"><label>Rent or Homeowner <span class="req">*</span></label><select name="rentOrHomeowner"><option value="">Select…</option><option>Rent</option><option>Homeowner</option><option>Other</option></select></div>
+        <div class="field"><label>Rent / Mortgage Amount <span class="req">*</span></label><input name="rentMortgageAmount" inputmode="decimal" placeholder="$ / month"></div>
+        <div class="field"><label>Years at Current Address <span class="req">*</span></label><input name="yearsCurrentAddress" inputmode="numeric"></div>
+        <div class="field"><label>Months at Current Address <span class="req">*</span></label><input name="monthsCurrentAddress" inputmode="numeric"></div>
         <div class="sub">Previous Address <span style="font-weight:400;color:var(--muted);font-size:13px">(if under 2 years at current)</span></div>
-        <div class="field full"><label>Previous Address</label><input name="previousAddress"></div>
-        <div class="field"><label>Years at Previous Address</label><input name="yearsPreviousAddress" inputmode="numeric"></div>
-        <div class="field"><label>Months at Previous Address</label><input name="monthsPreviousAddress" inputmode="numeric"></div>
+        <div class="field full"><label>Previous Address <span class="req">*</span></label><input name="previousAddress"></div>
+        <div class="field"><label>Years at Previous Address <span class="req">*</span></label><input name="yearsPreviousAddress" inputmode="numeric"></div>
+        <div class="field"><label>Months at Previous Address <span class="req">*</span></label><input name="monthsPreviousAddress" inputmode="numeric"></div>
         <div class="sub">Employment</div>
-        <div class="field"><label>Employer Name</label><input name="employerName"></div>
-        <div class="field"><label>Job Title</label><input name="jobTitle"></div>
-        <div class="field"><label>Employer City</label><input name="employerCity"></div>
-        <div class="field"><label>Employer State</label><input name="employerState"></div>
-        <div class="field"><label>Employer Zip</label><input name="employerZip" inputmode="numeric"></div>
-        <div class="field"><label>Work Number</label><input name="workNumber" type="tel"></div>
-        <div class="field"><label>Monthly Income</label><input name="monthlyIncome" inputmode="decimal" placeholder="$ / month"></div>
-        <div class="field"><label>Years at Current Job</label><input name="yearsCurrentJob" inputmode="numeric"></div>
-        <div class="field"><label>Months at Current Job</label><input name="monthsCurrentJob" inputmode="numeric"></div>
+        <div class="field"><label>Employer Name <span class="req">*</span></label><input name="employerName"></div>
+        <div class="field"><label>Job Title <span class="req">*</span></label><input name="jobTitle"></div>
+        <div class="field"><label>Employer City <span class="req">*</span></label><input name="employerCity"></div>
+        <div class="field"><label>Employer State <span class="req">*</span></label><input name="employerState"></div>
+        <div class="field"><label>Employer Zip <span class="req">*</span></label><input name="employerZip" inputmode="numeric"></div>
+        <div class="field"><label>Work Number <span class="req">*</span></label><input name="workNumber" type="tel"></div>
+        <div class="field"><label>Monthly Income <span class="req">*</span></label><input name="monthlyIncome" inputmode="decimal" placeholder="$ / month"></div>
+        <div class="field"><label>Years at Current Job <span class="req">*</span></label><input name="yearsCurrentJob" inputmode="numeric"></div>
+        <div class="field"><label>Months at Current Job <span class="req">*</span></label><input name="monthsCurrentJob" inputmode="numeric"></div>
         <div class="sub">Previous Employment <span style="font-weight:400;color:var(--muted);font-size:13px">(if under 2 years at current)</span></div>
-        <div class="field full"><label>Previous Employer</label><input name="previousEmployment"></div>
-        <div class="field"><label>Years at Last Job</label><input name="previousYearsLastJob" inputmode="numeric"></div>
-        <div class="field"><label>Months at Last Job</label><input name="previousMonthsLastJob" inputmode="numeric"></div>
+        <div class="field full"><label>Previous Employer <span class="req">*</span></label><input name="previousEmployment"></div>
+        <div class="field"><label>Years at Last Job <span class="req">*</span></label><input name="previousYearsLastJob" inputmode="numeric"></div>
+        <div class="field"><label>Months at Last Job <span class="req">*</span></label><input name="previousMonthsLastJob" inputmode="numeric"></div>
         <div class="sub">The Deal</div>
-        <div class="field"><label>Down Payment</label><input name="downPayment" inputmode="decimal" placeholder="$"></div>
+        <div class="field"><label>Down Payment <span class="req">*</span></label><input name="downPayment" inputmode="decimal" placeholder="$"></div>
       </div>
       <div class="foot"><button type="submit" class="btn btn-lg">Submit Application</button><span class="note">🔒 Encrypted and only used to process your financing.</span></div>
       <div class="msg" id="msg-financing"></div>
@@ -498,14 +499,31 @@ const TOOLS={
   refi:{type:'refinance', build:d=>d},
   insurance:{type:'help', build:d=>({name:d.name,phone:d.phone,email:d.email,vehicle:d.i_vehicle||'',lookingFor:'INSURANCE QUOTE — '+[d.i_coverage,d.i_current&&('current: '+d.i_current)].filter(Boolean).join(' · '),message:d.i_notes||''})}
 };
+function validateCreditApp(form){
+  var req=['firstName','lastName','phone','email','dob','ssn','driversLicense','currentStreet','currentCity','currentState','zip','rentOrHomeowner','rentMortgageAmount','yearsCurrentAddress','monthsCurrentAddress','employerName','jobTitle','employerCity','employerState','employerZip','workNumber','monthlyIncome','yearsCurrentJob','monthsCurrentJob','downPayment'];
+  var val=function(n){var el=form.querySelector('[name=\"'+n+'\"]');return el?String(el.value).trim():'';};
+  var addrYrs=(parseFloat(val('yearsCurrentAddress'))||0)+((parseFloat(val('monthsCurrentAddress'))||0)/12);
+  var jobYrs=(parseFloat(val('yearsCurrentJob'))||0)+((parseFloat(val('monthsCurrentJob'))||0)/12);
+  if(addrYrs<2){ req=req.concat(['previousAddress','yearsPreviousAddress','monthsPreviousAddress']); }
+  if(jobYrs<2){ req=req.concat(['previousEmployment','previousYearsLastJob','previousMonthsLastJob']); }
+  form.querySelectorAll('.field-err').forEach(function(el){ el.classList.remove('field-err'); });
+  var missing=[];
+  req.forEach(function(n){ var el=form.querySelector('[name=\"'+n+'\"]'); if(!el)return; if(String(el.value).trim()===''){ el.classList.add('field-err'); missing.push(el); } });
+  return missing;
+}
 function wire(kind){
   const form=document.getElementById('form-'+kind);const cfg=TOOLS[kind];
   form.addEventListener('submit',async(e)=>{
     e.preventDefault();
     const msg=document.getElementById('msg-'+kind);msg.className='msg';msg.textContent='';
     const data=collect(form);
-    if(!data.phone && !data.email){msg.className='msg err';msg.textContent='Please add a phone number or email so we can reach you.';return;}
-    if(!(data.name||data.firstName)){msg.className='msg err';msg.textContent='Please enter your name.';return;}
+    if(kind==='financing'){
+      var _miss=validateCreditApp(form);
+      if(_miss.length){ msg.className='msg err'; msg.textContent='Please complete all required fields — '+_miss.length+' still needed.'; _miss[0].scrollIntoView({behavior:'smooth',block:'center'}); try{_miss[0].focus({preventScroll:true});}catch(e){} return; }
+    } else {
+      if(!data.phone && !data.email){msg.className='msg err';msg.textContent='Please add a phone number or email so we can reach you.';return;}
+      if(!(data.name||data.firstName)){msg.className='msg err';msg.textContent='Please enter your name.';return;}
+    }
     const payload=cfg.build(data);
     const btn=form.querySelector('button[type=submit]');const label=btn.textContent;btn.disabled=true;btn.textContent='Sending…';
     try{ await sendLead(cfg.type,payload); form.style.display='none'; document.getElementById('ok-'+kind).style.display='block'; document.getElementById('ok-'+kind).scrollIntoView({behavior:'smooth',block:'center'}); }
@@ -514,6 +532,7 @@ function wire(kind){
   });
 }
 ['financing','refi','insurance'].forEach(wire);
+(function(){var ff=document.getElementById('form-financing'); if(ff){ ff.addEventListener('input',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); }); ff.addEventListener('change',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); }); }})();
 
 /* ===== SHOP: inventory feed (reads Supabase auto_inventory) ===== */
 let INVENTORY=[];let invLoaded=false;
