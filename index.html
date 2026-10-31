@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Car Scout v1.9.4 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
+<title>The Car Scout v1.11 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -285,9 +285,18 @@ footer{background:#061725;margin-top:0}
   .hero-story{position:absolute;top:50%;right:8px;transform:translateY(-50%);width:362px;max-width:40%;margin-top:0}
   .hs-p{max-width:none}
 }
+.ins-sec{margin-top:4px}
+.ins-card{border:1px solid var(--line);border-radius:12px;padding:16px 16px 4px;margin:14px 0;background:var(--surface)}
+.ins-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ins-card-title{font-weight:800;color:var(--navy);font-size:14px}
+.ins-remove{background:none;border:1px solid var(--line);color:var(--muted);font-weight:700;font-size:12.5px;padding:5px 12px;border-radius:8px;cursor:pointer;font-family:inherit;transition:.14s}
+.ins-remove:hover{border-color:#d92d20;color:#d92d20}
+.ins-hist-name{font-size:14px;font-weight:800;color:var(--navy);margin:2px 0 12px}
+.ins-add{width:100%;justify-content:center;margin-top:10px;border-style:dashed;border-color:var(--teal);color:var(--teal-d);background:var(--teal-soft);font-weight:800}
+.ins-add:hover{background:#fdeecb;border-color:var(--teal-d)}
 </style>
 </head>
-<!-- The Car Scout — Build v1.9.4 -->
+<!-- The Car Scout — Build v1.11 -->
 <body>
 
 <header>
@@ -494,20 +503,59 @@ footer{background:#061725;margin-top:0}
   <div class="section"><div class="wrap"><div class="card card-narrow">
     <form id="form-insurance" novalidate>
       <div class="grid">
-        <div class="sub">Your Info</div>
-        <div class="field"><label>Full Name <span class="req">*</span></label><input name="name" required></div>
-        <div class="field"><label>Phone <span class="req">*</span></label><input name="phone" type="tel" placeholder="(317) 555-0100"></div>
-        <div class="field full"><label>Email <span class="req">*</span></label><input name="email" type="email" placeholder="you@email.com"></div>
-        <div class="sub">What to Cover</div>
-        <div class="field full"><label>Vehicle(s) to insure</label><input name="i_vehicle" placeholder="e.g. 2021 Honda Accord"></div>
-        <div class="field"><label>Coverage type</label><select name="i_coverage"><option value="">Select…</option><option>Full coverage</option><option>Liability only</option><option>Not sure</option></select></div>
-        <div class="field"><label>Current insurer (if any)</label><input name="i_current" placeholder="optional"></div>
-        <div class="field full"><label>Anything else?</label><textarea name="i_notes" placeholder="Drivers, tickets/accidents, bundling home, etc."></textarea></div>
+        <div class="sub">Applicant Information</div>
+        <div class="field"><label>First Name <span class="req">*</span></label><input name="firstName"></div>
+        <div class="field"><label>Last Name <span class="req">*</span></label><input name="lastName"></div>
+        <div class="field"><label>Date of Birth <span class="req">*</span></label><input name="dob" type="date"></div>
+        <div class="field"><label>Phone Number <span class="req">*</span></label><input name="phone" type="tel" placeholder="(317) 555-0100"></div>
+        <div class="field full"><label>Email Address <span class="req">*</span></label><input name="email" type="email" placeholder="you@email.com"></div>
+        <div class="field full"><label>Street Address <span class="req">*</span></label><input name="street"></div>
+        <div class="field"><label>City <span class="req">*</span></label><input name="city"></div>
+        <div class="field"><label>State <span class="req">*</span></label><select name="state" id="insState"></select></div>
+        <div class="field"><label>ZIP Code <span class="req">*</span></label><input name="zip" inputmode="numeric"></div>
+        <div class="field"><label>Marital Status <span class="req">*</span></label><select name="maritalStatus"><option value="">Select&hellip;</option><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option></select></div>
+        <div class="field"><label>Driver&rsquo;s License Number <span class="req">*</span></label><input name="dlNumber"></div>
+        <div class="field"><label>Driver&rsquo;s License State <span class="req">*</span></label><select name="dlState" id="insDlState"></select></div>
       </div>
-      <div class="foot"><button type="submit" class="btn btn-lg">Get My Quote</button><span class="note">We'll shop carriers and follow up with options.</span></div>
+      <div class="grid">
+        <div class="sub">Current Auto Insurance</div>
+        <div class="field full"><label>Do you currently have auto insurance? <span class="req">*</span></label><select name="hasInsurance" id="insHasInsurance"><option value="">Select&hellip;</option><option>Yes</option><option>No</option></select></div>
+      </div>
+      <div class="grid" id="insCurrentWrap" style="display:none">
+        <div class="field"><label>Current Insurance Company <span class="req">*</span></label><input name="currentCompany"></div>
+        <div class="field"><label>How long continuously insured? <span class="req">*</span></label><input name="continuousDuration" placeholder="e.g. 3 years"></div>
+        <div class="field"><label>Current Policy Expiration Date <span class="req">*</span></label><input name="policyExpiration" type="date"></div>
+      </div>
+      <div class="ins-sec">
+        <div class="sub">Vehicles to Insure</div>
+        <div id="insVehicles"></div>
+        <button type="button" class="btn btn-out ins-add" onclick="insAddVehicle()">+ Add Another Vehicle</button>
+      </div>
+      <div class="ins-sec">
+        <div class="sub">Additional Drivers</div>
+        <div class="grid"><div class="field full"><label>Are there any additional drivers to insure? <span class="req">*</span></label><select name="hasAddlDrivers" id="insHasAddl"><option value="">Select&hellip;</option><option>Yes</option><option>No</option></select></div></div>
+        <div id="insAddlWrap" style="display:none">
+          <div id="insDrivers"></div>
+          <button type="button" class="btn btn-out ins-add" onclick="insAddDriver()">+ Add Another Driver</button>
+        </div>
+      </div>
+      <div class="ins-sec">
+        <div class="sub">Driving History</div>
+        <p class="note" style="margin:-2px 0 2px">Tickets and accidents in the past 5 years &mdash; asked for each driver.</p>
+        <div id="insHistory"></div>
+      </div>
+      <div class="grid">
+        <div class="sub">Preferred Coverage</div>
+        <div class="field full"><label>What type of coverage would you prefer? <span class="req">*</span></label><select name="coverageType"><option value="">Select&hellip;</option><option>State Minimum Liability</option><option>Higher Liability Limits</option><option>Full Coverage (Comprehensive &amp; Collision)</option><option>Not Sure &mdash; Help Me Choose</option></select></div>
+        <div class="field"><label>Preferred Deductible <span class="req">*</span></label><select name="deductible"><option value="">Select&hellip;</option><option>Liability Only</option><option>$250</option><option>$500</option><option>$1,000</option><option>$1,500</option><option>$2,500</option></select></div>
+        <div class="field"><label>Roadside Assistance? <span class="req">*</span></label><select name="roadside"><option value="">Select&hellip;</option><option>Yes</option><option>No</option></select></div>
+        <div class="field"><label>Rental Car Coverage? <span class="req">*</span></label><select name="rental"><option value="">Select&hellip;</option><option>Yes</option><option>No</option></select></div>
+        <div class="field"><label>Bundle Home or Renters? <span class="req">*</span></label><select name="bundle"><option value="">Select&hellip;</option><option>Home</option><option>Renters</option><option>No</option></select></div>
+      </div>
+      <div class="foot"><button type="submit" class="btn btn-lg">Submit Insurance Request</button><span class="note">We&rsquo;ll review your details and follow up with an accurate quote.</span></div>
       <div class="msg" id="msg-insurance"></div>
     </form>
-    <div class="ok-panel" id="ok-insurance"><div class="big">✓</div><h3>Thanks!</h3><p>We'll shop coverage for you and reach out with quotes shortly.</p><button class="btn btn-ghost" onclick="resetForm('insurance')">Submit another</button></div>
+    <div class="ok-panel" id="ok-insurance"><div class="big">✓</div><h3>Thanks!</h3><p>We'll shop coverage for you and reach out with quotes shortly.</p><button class="btn btn-ghost" onclick="insReset()">Submit another</button></div>
   </div></div></div>
 </div>
 
@@ -688,7 +736,7 @@ function wire(kind){
     finally{ btn.disabled=false;btn.textContent=label; }
   });
 }
-['financing','refi','insurance'].forEach(wire);
+['financing','refi'].forEach(wire);
 (function(){var ff=document.getElementById('form-financing'); if(ff){ ff.addEventListener('input',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); }); ff.addEventListener('change',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); }); }})();
 
 /* ===== SHOP: inventory feed (reads Supabase auto_inventory) ===== */
@@ -900,6 +948,312 @@ document.getElementById('form-sell').addEventListener('submit',async(e)=>{
 });
 
 
+
+/* ===== AUTO INSURANCE QUOTE — full questionnaire ===== */
+var INS_STATES=["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY","DC"];
+function insStateOptions(){ return '<option value="">Select…</option>'+INS_STATES.map(function(x){return '<option>'+x+'</option>';}).join(''); }
+var insVehSeq=0, insDrvSeq=1; /* applicant is d1 */
+function insReqStar(){ return '<span class="req">*</span>'; }
+function insForm(){ return document.getElementById('form-insurance'); }
+function insQ(sel){ var f=insForm(); return f?f.querySelector(sel):null; }
+function insMsg(t){ var m=document.getElementById('msg-insurance'); if(m){ m.className='msg err'; m.textContent=t; } }
+
+function insDriverList(){
+  var list=[{id:'d1',kind:'applicant'}];
+  var adds=document.querySelectorAll('#insDrivers .ins-driver');
+  for(var i=0;i<adds.length;i++){ list.push({id:adds[i].getAttribute('data-id'),kind:'additional',el:adds[i],idx:i+2}); }
+  return list;
+}
+function insDriverName(d){
+  if(d.kind==='applicant'){
+    var fn=((insQ('[name="firstName"]')||{}).value||'').trim(), ln=((insQ('[name="lastName"]')||{}).value||'').trim();
+    var nm=(fn+' '+ln).trim(); return 'Driver 1'+(nm?(' — '+nm):' (You)');
+  }
+  var b=d.el, fn=(b.querySelector('.idr-first').value||'').trim(), ln=(b.querySelector('.idr-last').value||'').trim();
+  var nm=(fn+' '+ln).trim(); return 'Driver '+d.idx+(nm?(' — '+nm):'');
+}
+function insPlainName(d){
+  if(d.kind==='applicant'){ var fn=((insQ('[name="firstName"]')||{}).value||'').trim(), ln=((insQ('[name="lastName"]')||{}).value||'').trim(); return (fn+' '+ln).trim()||'Applicant'; }
+  var b=d.el; return ((b.querySelector('.idr-first').value||'')+' '+(b.querySelector('.idr-last').value||'')).trim()||('Driver '+d.idx);
+}
+
+/* ---- Vehicles ---- */
+function insVehicleHTML(id){
+  return '<div class="ins-card ins-vehicle" data-id="'+id+'">'
+   +'<div class="ins-card-head"><span class="ins-card-title">Vehicle</span><button type="button" class="ins-remove" onclick="insRemoveVehicle(\''+id+'\')">Remove</button></div>'
+   +'<div class="grid">'
+   +'<div class="field"><label>Year '+insReqStar()+'</label><input class="iv-year" inputmode="numeric" placeholder="2021"></div>'
+   +'<div class="field"><label>Make '+insReqStar()+'</label><input class="iv-make" placeholder="Honda"></div>'
+   +'<div class="field"><label>Model '+insReqStar()+'</label><input class="iv-model" placeholder="Accord"></div>'
+   +'<div class="field"><label>VIN</label><input class="iv-vin" placeholder="optional" maxlength="17" style="text-transform:uppercase"></div>'
+   +'<div class="field"><label>Vehicle Ownership '+insReqStar()+'</label><select class="iv-own"><option value="">Select…</option><option>Owned</option><option>Financed</option><option>Leased</option></select></div>'
+   +'<div class="field"><label>Primary Use '+insReqStar()+'</label><select class="iv-use"><option value="">Select…</option><option>Personal</option><option>Commute</option><option>Business</option></select></div>'
+   +'<div class="field"><label>Estimated Annual Mileage '+insReqStar()+'</label><input class="iv-miles" inputmode="numeric" placeholder="e.g. 12,000"></div>'
+   +'<div class="field"><label>Primary Driver '+insReqStar()+'</label><select class="iv-driver"></select></div>'
+   +'</div></div>';
+}
+function insAddVehicle(){
+  var id='v'+(++insVehSeq);
+  var wrap=document.getElementById('insVehicles');
+  var tmp=document.createElement('div'); tmp.innerHTML=insVehicleHTML(id); var node=tmp.firstChild;
+  wrap.appendChild(node);
+  var sel=node.querySelector('.iv-driver'); insFillDriverSelect(sel); sel.value='d1';
+  insRenumberVehicles();
+  return node;
+}
+function insRemoveVehicle(id){
+  var nodes=document.querySelectorAll('#insVehicles .ins-vehicle');
+  if(nodes.length<=1){ insMsg('At least one vehicle is required.'); return; }
+  var n=document.querySelector('#insVehicles .ins-vehicle[data-id="'+id+'"]'); if(n)n.remove();
+  insRenumberVehicles();
+}
+function insRenumberVehicles(){
+  var nodes=document.querySelectorAll('#insVehicles .ins-vehicle');
+  for(var i=0;i<nodes.length;i++){ var t=nodes[i].querySelector('.ins-card-title'); if(t)t.textContent='Vehicle '+(i+1); var b=nodes[i].querySelector('.ins-remove'); if(b)b.style.visibility=(nodes.length<=1)?'hidden':'visible'; }
+}
+function insFillDriverSelect(sel){
+  if(!sel)return; var cur=sel.value; var list=insDriverList();
+  sel.innerHTML='<option value="">Select…</option>'+list.map(function(d){return '<option value="'+d.id+'">'+nesc(insDriverName(d))+'</option>';}).join('');
+  var keep=false; for(var i=0;i<list.length;i++){ if(list[i].id===cur){keep=true;break;} }
+  if(keep) sel.value=cur;
+}
+function insRefreshAllDriverSelects(){ var ss=document.querySelectorAll('#insVehicles .iv-driver'); for(var i=0;i<ss.length;i++) insFillDriverSelect(ss[i]); }
+
+/* ---- Additional drivers ---- */
+function insDriverHTML(id){
+  return '<div class="ins-card ins-driver" data-id="'+id+'">'
+   +'<div class="ins-card-head"><span class="ins-card-title">Additional Driver</span><button type="button" class="ins-remove" onclick="insRemoveDriver(\''+id+'\')">Remove</button></div>'
+   +'<div class="grid">'
+   +'<div class="field"><label>First Name '+insReqStar()+'</label><input class="idr-first"></div>'
+   +'<div class="field"><label>Last Name '+insReqStar()+'</label><input class="idr-last"></div>'
+   +'<div class="field"><label>Date of Birth '+insReqStar()+'</label><input class="idr-dob" type="date"></div>'
+   +'<div class="field"><label>Relationship to Applicant '+insReqStar()+'</label><input class="idr-rel" placeholder="Spouse, child, etc."></div>'
+   +'<div class="field"><label>Phone Number '+insReqStar()+'</label><input class="idr-phone" type="tel" placeholder="(317) 555-0100"></div>'
+   +'<div class="field full"><label>Email Address '+insReqStar()+'</label><input class="idr-email" type="email" placeholder="name@email.com"></div>'
+   +'<div class="field full"><label>Street Address '+insReqStar()+'</label><input class="idr-street"></div>'
+   +'<div class="field"><label>City '+insReqStar()+'</label><input class="idr-city"></div>'
+   +'<div class="field"><label>State '+insReqStar()+'</label><select class="idr-addr-state">'+insStateOptions()+'</select></div>'
+   +'<div class="field"><label>ZIP Code '+insReqStar()+'</label><input class="idr-zip" inputmode="numeric"></div>'
+   +'<div class="field"><label>Driver’s License Number '+insReqStar()+'</label><input class="idr-dln"></div>'
+   +'<div class="field"><label>Driver’s License State '+insReqStar()+'</label><select class="idr-dls">'+insStateOptions()+'</select></div>'
+   +'</div></div>';
+}
+function insAddDriver(){
+  var id='d'+(++insDrvSeq);
+  var wrap=document.getElementById('insDrivers');
+  var tmp=document.createElement('div'); tmp.innerHTML=insDriverHTML(id); var node=tmp.firstChild;
+  wrap.appendChild(node);
+  insAddHistoryBlock(id,'additional');
+  insRefreshAllDriverSelects(); insRenumberDrivers();
+  node.querySelector('.idr-first').addEventListener('input',insOnDriverNameChange);
+  node.querySelector('.idr-last').addEventListener('input',insOnDriverNameChange);
+  return node;
+}
+function insOnDriverNameChange(){ insRefreshAllDriverSelects(); insRefreshHistoryLabels(); }
+function insRenumberDrivers(){ var nodes=document.querySelectorAll('#insDrivers .ins-driver'); for(var i=0;i<nodes.length;i++){ var t=nodes[i].querySelector('.ins-card-title'); if(t)t.textContent='Additional Driver '+(i+1); } }
+function insRemoveDriver(id){
+  var assigned=[]; var ss=document.querySelectorAll('#insVehicles .iv-driver'); for(var i=0;i<ss.length;i++){ if(ss[i].value===id)assigned.push(ss[i]); }
+  if(assigned.length){ insMsg('This driver is the primary driver on a vehicle. Choose a different primary driver for that vehicle first.'); assigned[0].scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  var n=document.querySelector('#insDrivers .ins-driver[data-id="'+id+'"]'); if(n)n.remove();
+  var h=document.querySelector('#insHistory .ins-hist[data-driver="'+id+'"]'); if(h)h.remove();
+  insRefreshAllDriverSelects(); insRefreshHistoryLabels(); insRenumberDrivers();
+}
+
+/* ---- Driving history (per driver) ---- */
+function insHistoryHTML(id,kind){
+  var counts='<option value="">Select…</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>';
+  return '<div class="ins-card ins-hist" data-driver="'+id+'" data-kind="'+kind+'">'
+   +'<h4 class="ins-hist-name"></h4>'
+   +'<div class="field full"><label>Have you received any speeding tickets in the past 5 years? '+insReqStar()+'</label><select class="ih-tick-has"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>'
+   +'<div class="ih-tick-more" style="display:none"><div class="field"><label>How many speeding tickets? '+insReqStar()+'</label><select class="ih-tick-count">'+counts+'</select></div></div>'
+   +'<div class="field full"><label>Have you been involved in any auto accidents in the past 5 years? '+insReqStar()+'</label><select class="ih-acc-has"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>'
+   +'<div class="ih-acc-more" style="display:none"><div class="field"><label>How many accidents? '+insReqStar()+'</label><select class="ih-acc-count">'+counts+'</select></div><div class="ih-faults"></div></div>'
+   +'</div>';
+}
+function insAddHistoryBlock(id,kind){
+  var wrap=document.getElementById('insHistory');
+  var tmp=document.createElement('div'); tmp.innerHTML=insHistoryHTML(id,kind); var node=tmp.firstChild;
+  wrap.appendChild(node);
+  node.querySelector('.ih-tick-has').addEventListener('change',function(){ node.querySelector('.ih-tick-more').style.display=(this.value==='Yes')?'':'none'; if(this.value!=='Yes'){ var c=node.querySelector('.ih-tick-count'); if(c)c.value=''; } });
+  node.querySelector('.ih-acc-has').addEventListener('change',function(){ var more=node.querySelector('.ih-acc-more'); more.style.display=(this.value==='Yes')?'':'none'; if(this.value!=='Yes'){ node.querySelector('.ih-acc-count').value=''; node.querySelector('.ih-faults').innerHTML=''; } });
+  node.querySelector('.ih-acc-count').addEventListener('change',function(){ insRenderFaults(node,this.value); });
+  insRefreshHistoryLabels();
+  return node;
+}
+function insRenderFaults(node,countVal){
+  var n=countVal==='5+'?5:(parseInt(countVal,10)||0);
+  var wrap=node.querySelector('.ih-faults');
+  var prev=[]; var old=wrap.querySelectorAll('select'); for(var k=0;k<old.length;k++)prev.push(old[k].value);
+  var html=''; for(var i=0;i<n;i++){ html+='<div class="field"><label>Accident '+(i+1)+' — were you at fault? '+insReqStar()+'</label><select class="ih-fault"><option value="">Select…</option><option>Yes</option><option>No</option><option>Not Sure</option></select></div>'; }
+  wrap.innerHTML=html;
+  var now=wrap.querySelectorAll('select'); for(var j=0;j<now.length;j++){ if(prev[j])now[j].value=prev[j]; }
+}
+function insRefreshHistoryLabels(){
+  var list=insDriverList(); var byId={}; for(var i=0;i<list.length;i++)byId[list[i].id]=list[i];
+  var hs=document.querySelectorAll('#insHistory .ins-hist');
+  for(var h=0;h<hs.length;h++){ var id=hs[h].getAttribute('data-driver'); var d=byId[id]; var nm=hs[h].querySelector('.ins-hist-name'); if(d&&nm)nm.textContent=insDriverName(d); }
+}
+
+/* ---- Validation ---- */
+function validateInsurance(){
+  var problems=[]; var f=insForm();
+  function add(el,msg){ if(el){ el.classList.add('field-err'); } problems.push({el:el||null,msg:msg}); }
+  function need(sel,msg){ var e=f.querySelector(sel); if(!e||!String(e.value).trim()){ add(e,msg); return false;} return true; }
+  need('[name="firstName"]','Enter the applicant’s first name');
+  need('[name="lastName"]','Enter the applicant’s last name');
+  var dob=f.querySelector('[name="dob"]'); if(!dob.value||isNaN(Date.parse(dob.value))) add(dob,'Enter a valid date of birth');
+  var ph=f.querySelector('[name="phone"]'); if(!/^\d{10}$/.test(String(ph.value).replace(/\D/g,''))) add(ph,'Enter a valid 10-digit phone number');
+  var em=f.querySelector('[name="email"]'); if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(em.value).trim())) add(em,'Enter a valid email address');
+  need('[name="street"]','Enter the street address');
+  need('[name="city"]','Enter the city');
+  need('[name="state"]','Select the state');
+  var zip=f.querySelector('[name="zip"]'); if(!/^\d{5}$/.test(String(zip.value).trim())) add(zip,'Enter a valid 5-digit ZIP code');
+  need('[name="maritalStatus"]','Select marital status');
+  need('[name="dlNumber"]','Enter the driver’s license number');
+  need('[name="dlState"]','Select the driver’s license state');
+  var hi=f.querySelector('[name="hasInsurance"]'); if(!hi.value){ add(hi,'Tell us if you currently have auto insurance'); }
+  else if(hi.value==='Yes'){ need('[name="currentCompany"]','Enter your current insurance company'); need('[name="continuousDuration"]','Enter how long you have been continuously insured'); var pe=f.querySelector('[name="policyExpiration"]'); if(!pe.value||isNaN(Date.parse(pe.value))) add(pe,'Enter a valid policy expiration date'); }
+  var vehs=f.querySelectorAll('#insVehicles .ins-vehicle');
+  if(!vehs.length){ add(null,'Add at least one vehicle'); }
+  var ymax=new Date().getFullYear()+2;
+  for(var vi=0; vi<vehs.length; vi++){ var v=vehs[vi];
+    var y=v.querySelector('.iv-year'); var yn=parseInt(y.value,10); if(!/^\d{4}$/.test(String(y.value).trim())||yn<1900||yn>ymax) add(y,'Enter a valid vehicle year');
+    if(!v.querySelector('.iv-make').value.trim()) add(v.querySelector('.iv-make'),'Enter the vehicle make');
+    if(!v.querySelector('.iv-model').value.trim()) add(v.querySelector('.iv-model'),'Enter the vehicle model');
+    if(!v.querySelector('.iv-own').value) add(v.querySelector('.iv-own'),'Select vehicle ownership');
+    if(!v.querySelector('.iv-use').value) add(v.querySelector('.iv-use'),'Select primary use');
+    var mi=v.querySelector('.iv-miles'); var mn=Number(String(mi.value).replace(/[,\s]/g,'')); if(String(mi.value).trim()===''||isNaN(mn)||mn<0) add(mi,'Enter valid annual mileage');
+    if(!v.querySelector('.iv-driver').value) add(v.querySelector('.iv-driver'),'Select the primary driver');
+  }
+  var hd=f.querySelector('[name="hasAddlDrivers"]'); if(!hd.value){ add(hd,'Tell us if there are additional drivers'); }
+  else if(hd.value==='Yes'){ var drvs=f.querySelectorAll('#insDrivers .ins-driver'); if(!drvs.length){ add(hd,'Add at least one additional driver, or select No'); }
+    for(var di=0; di<drvs.length; di++){ var b=drvs[di];
+      if(!b.querySelector('.idr-first').value.trim()) add(b.querySelector('.idr-first'),'Enter the driver’s first name');
+      if(!b.querySelector('.idr-last').value.trim()) add(b.querySelector('.idr-last'),'Enter the driver’s last name');
+      var dd=b.querySelector('.idr-dob'); if(!dd.value||isNaN(Date.parse(dd.value))) add(dd,'Enter a valid date of birth');
+      if(!b.querySelector('.idr-rel').value.trim()) add(b.querySelector('.idr-rel'),'Enter the relationship to applicant');
+      var dph=b.querySelector('.idr-phone'); if(!/^\d{10}$/.test(String(dph.value).replace(/\D/g,''))) add(dph,'Enter a valid 10-digit phone number for the driver');
+      var dem=b.querySelector('.idr-email'); if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(dem.value).trim())) add(dem,'Enter a valid email address for the driver');
+      if(!b.querySelector('.idr-street').value.trim()) add(b.querySelector('.idr-street'),'Enter the driver street address');
+      if(!b.querySelector('.idr-city').value.trim()) add(b.querySelector('.idr-city'),'Enter the driver city');
+      if(!b.querySelector('.idr-addr-state').value) add(b.querySelector('.idr-addr-state'),'Select the driver state');
+      var dzip=b.querySelector('.idr-zip'); if(!/^\d{5}$/.test(String(dzip.value).trim())) add(dzip,'Enter a valid 5-digit ZIP code for the driver');
+      if(!b.querySelector('.idr-dln').value.trim()) add(b.querySelector('.idr-dln'),'Enter the driver’s license number');
+      if(!b.querySelector('.idr-dls').value) add(b.querySelector('.idr-dls'),'Select the driver’s license state');
+    }
+  }
+  var hs=f.querySelectorAll('#insHistory .ins-hist');
+  for(var hi2=0; hi2<hs.length; hi2++){ var h=hs[hi2];
+    var th=h.querySelector('.ih-tick-has'); if(!th.value){ add(th,'Answer the speeding ticket question for each driver'); }
+    else if(th.value==='Yes'){ var tc=h.querySelector('.ih-tick-count'); if(!tc.value) add(tc,'Select how many speeding tickets'); }
+    var ah=h.querySelector('.ih-acc-has'); if(!ah.value){ add(ah,'Answer the accident question for each driver'); }
+    else if(ah.value==='Yes'){ var ac=h.querySelector('.ih-acc-count'); if(!ac.value){ add(ac,'Select how many accidents'); } else { var fs=h.querySelectorAll('.ih-faults .ih-fault'); for(var fi=0; fi<fs.length; fi++){ if(!fs[fi].value) add(fs[fi],'Select fault status for each accident'); } } }
+  }
+  need('[name="coverageType"]','Select a coverage type');
+  need('[name="deductible"]','Select a deductible');
+  need('[name="roadside"]','Select a roadside assistance preference');
+  need('[name="rental"]','Select a rental car coverage preference');
+  need('[name="bundle"]','Select a bundling preference');
+  return problems;
+}
+
+/* ---- Payload ---- */
+function insCollectHistory(driverId){
+  var h=document.querySelector('#insHistory .ins-hist[data-driver="'+driverId+'"]'); if(!h)return null;
+  var tHas=h.querySelector('.ih-tick-has').value;
+  var tCount=tHas==='Yes'?h.querySelector('.ih-tick-count').value:'';
+  var aHas=h.querySelector('.ih-acc-has').value;
+  var aCount=aHas==='Yes'?h.querySelector('.ih-acc-count').value:'';
+  var faults=[]; if(aHas==='Yes'){ var fs=h.querySelectorAll('.ih-faults .ih-fault'); for(var i=0;i<fs.length;i++)faults.push({accident:i+1,atFault:fs[i].value}); }
+  return { speedingTickets:{has:tHas,count:tCount}, accidents:{has:aHas,count:aCount,faults:faults} };
+}
+function buildInsurancePayload(){
+  var g=function(sel){var e=insQ(sel);return e?String(e.value).trim():'';};
+  var applicant={firstName:g('[name="firstName"]'),lastName:g('[name="lastName"]'),dob:g('[name="dob"]'),phone:g('[name="phone"]'),email:g('[name="email"]'),street:g('[name="street"]'),city:g('[name="city"]'),state:g('[name="state"]'),zip:g('[name="zip"]'),maritalStatus:g('[name="maritalStatus"]'),dlNumber:g('[name="dlNumber"]'),dlState:g('[name="dlState"]')};
+  var hasIns=g('[name="hasInsurance"]');
+  var currentInsurance={hasInsurance:hasIns,company:hasIns==='Yes'?g('[name="currentCompany"]'):'',continuousDuration:hasIns==='Yes'?g('[name="continuousDuration"]'):'',policyExpiration:hasIns==='Yes'?g('[name="policyExpiration"]'):''};
+  var fullName=(applicant.firstName+' '+applicant.lastName).trim();
+  var additionalDrivers=[]; var dnodes=document.querySelectorAll('#insDrivers .ins-driver');
+  for(var i=0;i<dnodes.length;i++){ var b=dnodes[i]; var id=b.getAttribute('data-id');
+    additionalDrivers.push({id:id,firstName:b.querySelector('.idr-first').value.trim(),lastName:b.querySelector('.idr-last').value.trim(),dob:b.querySelector('.idr-dob').value,relationship:b.querySelector('.idr-rel').value.trim(),phone:b.querySelector('.idr-phone').value.trim(),email:b.querySelector('.idr-email').value.trim(),street:b.querySelector('.idr-street').value.trim(),city:b.querySelector('.idr-city').value.trim(),state:b.querySelector('.idr-addr-state').value,zip:b.querySelector('.idr-zip').value.trim(),dlNumber:b.querySelector('.idr-dln').value.trim(),dlState:b.querySelector('.idr-dls').value,drivingHistory:insCollectHistory(id)}); }
+  var applicantDrivingHistory=insCollectHistory('d1');
+  var nameById={d1:fullName||'Driver 1'}; for(var k=0;k<additionalDrivers.length;k++){ var ad=additionalDrivers[k]; nameById[ad.id]=((ad.firstName+' '+ad.lastName).trim())||('Driver '+(k+2)); }
+  var vehicles=[]; var vnodes=document.querySelectorAll('#insVehicles .ins-vehicle');
+  for(var vi=0;vi<vnodes.length;vi++){ var v=vnodes[vi]; var pid=v.querySelector('.iv-driver').value;
+    vehicles.push({year:v.querySelector('.iv-year').value.trim(),make:v.querySelector('.iv-make').value.trim(),model:v.querySelector('.iv-model').value.trim(),vin:v.querySelector('.iv-vin').value.trim().toUpperCase(),ownership:v.querySelector('.iv-own').value,use:v.querySelector('.iv-use').value,annualMileage:v.querySelector('.iv-miles').value.trim(),primaryDriverId:pid,primaryDriverName:nameById[pid]||''}); }
+  var coverage={type:g('[name="coverageType"]'),deductible:g('[name="deductible"]'),roadside:g('[name="roadside"]'),rental:g('[name="rental"]'),bundle:g('[name="bundle"]')};
+  var firstVeh=vehicles[0]?[vehicles[0].year,vehicles[0].make,vehicles[0].model].filter(Boolean).join(' '):'';
+  var drvCount=additionalDrivers.length+1;
+  var lookingFor='INSURANCE QUOTE — '+[coverage.type,vehicles.length+' vehicle'+(vehicles.length!==1?'s':''),drvCount+' driver'+(drvCount!==1?'s':'')].filter(Boolean).join(' · ');
+  function hStr(h){ if(!h)return 'n/a'; var p=[]; p.push('tickets: '+(h.speedingTickets.has==='Yes'?h.speedingTickets.count:'No')); p.push('accidents: '+(h.accidents.has==='Yes'?(h.accidents.count+(h.accidents.faults.length?(' [fault '+h.accidents.faults.map(function(x){return x.atFault;}).join('/')+']'):'')):'No')); return p.join(', '); }
+  var lines=[];
+  lines.push(fullName+(applicant.city?(' · '+applicant.city+', '+applicant.state+' '+applicant.zip):''));
+  lines.push('Current insurance: '+hasIns+(hasIns==='Yes'?(' ('+currentInsurance.company+', '+currentInsurance.continuousDuration+', exp '+currentInsurance.policyExpiration+')'):''));
+  for(var vl=0;vl<vehicles.length;vl++){ var vv=vehicles[vl]; lines.push('Vehicle '+(vl+1)+': '+[vv.year,vv.make,vv.model].filter(Boolean).join(' ')+(vv.vin?(' VIN '+vv.vin):'')+' · '+vv.ownership+' · '+vv.use+' · '+vv.annualMileage+' mi/yr · Driver: '+vv.primaryDriverName); }
+  lines.push('Driver 1 ('+fullName+'): '+hStr(applicantDrivingHistory));
+  for(var dl=0;dl<additionalDrivers.length;dl++){ var da=additionalDrivers[dl]; lines.push('Driver '+(dl+2)+' ('+((da.firstName+' '+da.lastName).trim())+', '+da.relationship+'): '+hStr(da.drivingHistory)); }
+  lines.push('Coverage: '+coverage.type+' · Deductible '+coverage.deductible+' · Roadside '+coverage.roadside+' · Rental '+coverage.rental+' · Bundle '+coverage.bundle);
+  return {
+    name:fullName, phone:applicant.phone, email:applicant.email,
+    vehicle:firstVeh, lookingFor:lookingFor, message:lines.join('\n'),
+    leadType:'insurance',
+    applicant:applicant, currentInsurance:currentInsurance, applicantDrivingHistory:applicantDrivingHistory,
+    vehicles:vehicles, additionalDrivers:additionalDrivers, coverage:coverage
+  };
+}
+
+/* ---- Submit / reset / init ---- */
+function wireInsurance(){
+  var f=insForm(); if(!f)return;
+  f.addEventListener('submit',async function(e){
+    e.preventDefault();
+    var msg=document.getElementById('msg-insurance'); msg.className='msg'; msg.textContent='';
+    var olds=f.querySelectorAll('.field-err'); for(var i=0;i<olds.length;i++)olds[i].classList.remove('field-err');
+    var probs=validateInsurance();
+    if(probs.length){ var first=null; for(var p=0;p<probs.length;p++){ if(probs[p].el){first=probs[p];break;} } if(!first)first=probs[0];
+      msg.className='msg err'; msg.textContent=(first.msg||'Please complete all required fields')+(probs.length>1?(' — '+probs.length+' item(s) need attention.'):'.');
+      if(first.el){ first.el.scrollIntoView({behavior:'smooth',block:'center'}); try{first.el.focus({preventScroll:true});}catch(_){} } return; }
+    var payload=buildInsurancePayload();
+    var btn=f.querySelector('button[type=submit]'); var label=btn.textContent; btn.disabled=true; btn.textContent='Sending…';
+    try{ await sendLead('help',payload); f.style.display='none'; var ok=document.getElementById('ok-insurance'); ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'}); }
+    catch(err){ console.error(err); msg.className='msg err'; msg.textContent='Something went wrong sending your info. Please try again, or give us a call.'; }
+    finally{ btn.disabled=false; btn.textContent=label; }
+  });
+  f.addEventListener('input',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); });
+  f.addEventListener('change',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); });
+}
+function insReset(){
+  var f=insForm(); f.reset();
+  document.getElementById('insVehicles').innerHTML='';
+  document.getElementById('insDrivers').innerHTML='';
+  document.getElementById('insHistory').innerHTML='';
+  document.getElementById('insCurrentWrap').style.display='none';
+  document.getElementById('insAddlWrap').style.display='none';
+  insVehSeq=0; insDrvSeq=1;
+  insAddHistoryBlock('d1','applicant');
+  insAddVehicle();
+  var errs=f.querySelectorAll('.field-err'); for(var i=0;i<errs.length;i++)errs[i].classList.remove('field-err');
+  var m=document.getElementById('msg-insurance'); if(m){m.className='msg';m.textContent='';}
+  f.style.display=''; document.getElementById('ok-insurance').style.display='none';
+}
+function insInit(){
+  var f=insForm(); if(!f)return;
+  var st=f.querySelector('[name="state"]'); if(st)st.innerHTML=insStateOptions();
+  var dls=f.querySelector('[name="dlState"]'); if(dls)dls.innerHTML=insStateOptions();
+  insAddHistoryBlock('d1','applicant');
+  insAddVehicle();
+  var hi=document.getElementById('insHasInsurance'); if(hi)hi.addEventListener('change',function(){ document.getElementById('insCurrentWrap').style.display=(this.value==='Yes')?'':'none'; });
+  var ha=document.getElementById('insHasAddl'); if(ha)ha.addEventListener('change',function(){
+    var w=document.getElementById('insAddlWrap');
+    if(this.value==='Yes'){ w.style.display=''; if(!document.querySelectorAll('#insDrivers .ins-driver').length) insAddDriver(); }
+    else { w.style.display='none'; document.getElementById('insDrivers').innerHTML=''; var hh=document.querySelectorAll('#insHistory .ins-hist[data-kind="additional"]'); for(var i=0;i<hh.length;i++)hh[i].remove(); insRefreshAllDriverSelects(); insRefreshHistoryLabels(); }
+  });
+  var fnm=f.querySelector('[name="firstName"]'), lnm=f.querySelector('[name="lastName"]');
+  if(fnm)fnm.addEventListener('input',insOnDriverNameChange);
+  if(lnm)lnm.addEventListener('input',insOnDriverNameChange);
+  wireInsurance();
+}
+
 /* ===== testimonials rotator ===== */
 (function(){
   const track=document.getElementById('ttrack'); if(!track)return;
@@ -916,6 +1270,7 @@ document.getElementById('form-sell').addEventListener('submit',async(e)=>{
 /* initial data load (runs after all declarations are initialized) */
 try{ loadInventory(); }catch(e){ console.error(e); }
 try{ startNews(); }catch(e){ console.error(e); }
+try{ insInit(); }catch(e){ console.error(e); }
 </script>
 </body>
 </html>
