@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Car Scout v1.9.1 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
+<title>The Car Scout v1.9.2 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -225,7 +225,7 @@ footer{background:#061725;margin-top:0}
 .news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .nart{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:.15s;color:inherit;text-decoration:none}
 .nart:hover{transform:translateY(-3px);border-color:var(--teal);box-shadow:0 14px 34px rgba(14,23,38,.1)}
-.nart-img{aspect-ratio:16/9;background:var(--body) center/cover no-repeat;display:grid;place-items:center;color:var(--muted-d);font-size:28px}
+.nart-img{position:relative;aspect-ratio:16/9;background:var(--body);display:grid;place-items:center;color:var(--muted-d);font-size:28px;overflow:hidden}
 .nart-b{padding:15px 17px;display:flex;flex-direction:column;gap:7px;flex:1}
 .nart-meta{font-size:12px;color:var(--teal-d);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
 .nart h3{font-size:15.5px;line-height:1.28}
@@ -261,7 +261,8 @@ footer{background:#061725;margin-top:0}
 .news-tab.active{background:var(--navy);border-color:var(--navy);color:#fff}
 .news-feature{display:grid;grid-template-columns:1.2fr 1fr;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow);text-decoration:none;color:inherit;margin-bottom:22px;transition:.15s}
 .news-feature:hover{border-color:var(--teal);box-shadow:0 16px 40px rgba(14,23,38,.12);transform:translateY(-2px)}
-.nf-img{min-height:300px;background:var(--body) center/cover no-repeat;display:grid;place-items:center;color:var(--muted-d);font-size:40px}
+.nf-img{position:relative;min-height:300px;background:var(--body);display:grid;place-items:center;color:var(--muted-d);font-size:40px;overflow:hidden}
+.nart-img>img,.nf-img>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--body);border:0;display:block}
 .nf-b{padding:26px 30px;display:flex;flex-direction:column;gap:11px;justify-content:center}
 .nf-b h3{font-size:25px;line-height:1.2;color:var(--navy)}
 .nf-sum{font-size:14px;line-height:1.55;color:var(--muted)}
@@ -271,7 +272,7 @@ footer{background:#061725;margin-top:0}
 @media(max-width:760px){.news-feature{grid-template-columns:1fr}.nf-img{min-height:0;aspect-ratio:16/9}.nf-b{padding:18px 18px 22px}.nf-b h3{font-size:20px}}
 </style>
 </head>
-<!-- The Car Scout — Build v1.9.1 -->
+<!-- The Car Scout — Build v1.9.2 -->
 <body>
 
 <header>
@@ -792,9 +793,8 @@ async function loadNews(force){
 }
 function newsCard(it){
   var img=newsImg(it), src=it.source||'Auto News';
-  var style=img?(' style="background-image:url(\''+String(img).replace(/'/g,'%27')+'\')"'):'';
   return '<a class="nart" href="'+nesc(it.link)+'" target="_blank" rel="noopener">'+
-    '<div class="nart-img"'+style+'>'+(img?'':'🗞')+'</div>'+
+    '<div class="nart-img">🗞'+(img?('<img src="'+nesc(img)+'" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">'):'')+'</div>'+
     '<div class="nart-b"><div class="nart-meta">'+nesc(src)+(it.pubDate?(' · '+fmtNewsDate(it.pubDate)):'')+'</div>'+
     '<h3>'+nesc(it.title)+'</h3>'+
     (it.summary?('<p class="nart-sum">'+nesc(it.summary)+'</p>'):'')+
@@ -809,9 +809,9 @@ function renderNews(items){
   var ordered=withImg.concat(noImg);
   var f=ordered[0], rest=ordered.slice(1,7);
   if(feat && f){
-    var fimg=newsImg(f), fstyle=fimg?(' style="background-image:url(\''+String(fimg).replace(/'/g,'%27')+'\')"'):'';
+    var fimg=newsImg(f);
     feat.href=f.link||'#'; feat.style.display='';
-    feat.innerHTML='<div class="nf-img"'+fstyle+'>'+(fimg?'':'🗞')+'</div>'+
+    feat.innerHTML='<div class="nf-img">🗞'+(fimg?('<img src="'+nesc(fimg)+'" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">'):'')+'</div>'+
       '<div class="nf-b"><div class="nart-meta">'+nesc(f.source||'Auto News')+(f.pubDate?(' · '+fmtNewsDate(f.pubDate)):'')+'</div>'+
       '<h3>'+nesc(f.title)+'</h3>'+
       (f.summary?('<p class="nf-sum">'+nesc(f.summary)+'</p>'):'')+
