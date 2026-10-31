@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Car Scout v1.8 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
+<title>The Car Scout v1.9.1 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -255,9 +255,23 @@ footer{background:#061725;margin-top:0}
 .cs-consent-body p:last-child{margin-bottom:0}
 .cs-consent-check{display:flex;gap:10px;align-items:flex-start;margin-top:15px;font-size:13px;line-height:1.45;color:var(--navy);font-weight:600;cursor:pointer}
 .cs-consent-check input{margin-top:1px;width:18px;height:18px;flex:0 0 auto;cursor:pointer;accent-color:var(--teal)}
+.news-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.news-tab{border:1px solid var(--line);background:var(--surface);color:var(--muted);font-weight:600;font-size:13px;padding:8px 15px;border-radius:999px;cursor:pointer;font-family:inherit;transition:.14s}
+.news-tab:hover{border-color:var(--teal);color:var(--navy)}
+.news-tab.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.news-feature{display:grid;grid-template-columns:1.2fr 1fr;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow);text-decoration:none;color:inherit;margin-bottom:22px;transition:.15s}
+.news-feature:hover{border-color:var(--teal);box-shadow:0 16px 40px rgba(14,23,38,.12);transform:translateY(-2px)}
+.nf-img{min-height:300px;background:var(--body) center/cover no-repeat;display:grid;place-items:center;color:var(--muted-d);font-size:40px}
+.nf-b{padding:26px 30px;display:flex;flex-direction:column;gap:11px;justify-content:center}
+.nf-b h3{font-size:25px;line-height:1.2;color:var(--navy)}
+.nf-sum{font-size:14px;line-height:1.55;color:var(--muted)}
+.nart-sum{font-size:13px;line-height:1.5;color:var(--muted)}
+.news-state{padding:44px 20px;text-align:center;color:var(--muted);font-size:14px;line-height:1.6;border:1px dashed var(--line);border-radius:12px;background:var(--surface)}
+.news-state.news-error{border-color:#f1c0bb;background:#fef5f4;color:#9a3a32}
+@media(max-width:760px){.news-feature{grid-template-columns:1fr}.nf-img{min-height:0;aspect-ratio:16/9}.nf-b{padding:18px 18px 22px}.nf-b h3{font-size:20px}}
 </style>
 </head>
-<!-- The Car Scout — Build v1.8 -->
+<!-- The Car Scout — Build v1.9.1 -->
 <body>
 
 <header>
@@ -330,12 +344,18 @@ footer{background:#061725;margin-top:0}
   </div>
   <div class="section alt">
     <div class="wrap">
-      <div class="sec-head"><div class="k">Rankings &amp; buying guide</div><h2>Which cars are winning in 2026</h2><p>Best-selling, fastest-selling, and most-reliable coverage from credible automotive news sources. Pick a category to read the latest published articles and research.</p></div>
-      <h3 class="guide-group">General Vehicles</h3>
-      <div class="guide-grid" id="guideGeneral"></div>
-      <h3 class="guide-group">Luxury Vehicles</h3>
-      <div class="guide-grid" id="guideLuxury"></div>
-      <p class="note" style="margin-top:16px">Reporting year 2026 · Rankings and figures are published by the linked sources — open a category for the latest research and dates. We never publish made-up lists.</p>
+      <div class="sec-head"><div class="k">Automotive News</div><h2>What&rsquo;s new in cars</h2><p>The latest headlines, vehicle launches, and industry developments.</p></div>
+      <div class="news-tabs" id="newsTabs">
+        <button class="news-tab active" data-cat="all" onclick="setNewsCat('all')">All News</button>
+        <button class="news-tab" data-cat="new-models" onclick="setNewsCat('new-models')">New Models</button>
+        <button class="news-tab" data-cat="industry" onclick="setNewsCat('industry')">Industry News</button>
+        <button class="news-tab" data-cat="ev" onclick="setNewsCat('ev')">Electric Vehicles</button>
+        <button class="news-tab" data-cat="reviews" onclick="setNewsCat('reviews')">Reviews</button>
+      </div>
+      <div id="newsState" class="news-state" style="display:none"></div>
+      <a id="newsFeature" class="news-feature" target="_blank" rel="noopener" style="display:none"></a>
+      <div class="news-grid" id="newsGrid"></div>
+      <p class="note" id="newsFoot" style="margin-top:16px;display:none">Headlines are pulled live from automotive news publishers and open the original article. We only show real, published headlines, photos and dates &mdash; never made-up content.</p>
     </div>
   </div>
 </div>
@@ -379,17 +399,6 @@ footer{background:#061725;margin-top:0}
       <div class="msg" id="msg-car"></div>
     </form>
     <div class="ok-panel" id="ok-car" style="padding:24px 10px"><div class="big">✓</div><h3>We're on it!</h3><p>We'll confirm this vehicle's availability and reach out right away.</p><button class="btn btn-ghost" onclick="closeCar()">Done</button></div>
-  </div>
-</div>
-
-<!-- rankings & buying guide modal -->
-<div id="guideModal" class="hidden" style="position:fixed;inset:0;z-index:100;background:rgba(14,23,38,.6);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto">
-  <div class="card" style="max-width:720px;width:100%" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
-      <div><div class="eyebrow" id="gmMetric" style="color:var(--teal-d)"></div><h3 id="gmTitle" style="font-size:22px;margin-top:4px"></h3><div class="note" id="gmSub" style="margin-top:4px"></div></div>
-      <button onclick="closeGuide()" style="background:none;border:none;font-size:26px;cursor:pointer;color:var(--muted)">×</button>
-    </div>
-    <div id="gmBody" style="margin-top:14px"></div>
   </div>
 </div>
 
@@ -743,76 +752,74 @@ function requestVehicleHelp(){
   var mg=document.getElementById('msg-car'); if(mg)mg.className='msg';
   document.getElementById('carModal').classList.remove('hidden');
 }
-/* ===== LIVE AUTO NEWS ===== */
-var newsLoaded=false;
-async function loadNews(){
-  var grid=document.getElementById('newsGrid'); if(!grid||newsLoaded)return; newsLoaded=true;
-  try{
-    var r=await fetch('/api/news',{headers:{'Accept':'application/json'}});
-    var j=await r.json();
-    if(!j||!j.items||!j.items.length)throw new Error('no items');
-    renderNews(j.items.slice(0,6), j.source);
-  }catch(e){ console.error('news load failed',e); grid.innerHTML=''; var fb=document.getElementById('newsFallback'); if(fb)fb.style.display='block'; newsLoaded=false; }
-}
-function newsImg(it){ return it.image||it.thumbnail||''; }
+/* ===== LIVE AUTOMOTIVE NEWS ===== */
+var NEWS_CAT='all', NEWS_REQ=0, NEWS_TIMER=null, NEWS_STARTED=false;
 function fmtNewsDate(s){try{var d=new Date(s);if(isNaN(d))return '';return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}catch(e){return '';}}
-function renderNews(items,feedTitle){
+function newsImg(it){ return (it&&(it.image||it.thumbnail))||''; }
+function setNewsCat(cat){
+  NEWS_CAT=cat;
+  var tabs=document.querySelectorAll('#newsTabs .news-tab');
+  for(var i=0;i<tabs.length;i++){ tabs[i].classList.toggle('active', tabs[i].getAttribute('data-cat')===cat); }
+  loadNews(true);
+}
+async function loadNews(force){
   var grid=document.getElementById('newsGrid'); if(!grid)return;
-  grid.innerHTML=items.map(function(it){var img=newsImg(it);var src=it.author||feedTitle||'Auto News';var style=img?(' style="background-image:url(\''+String(img).replace(/'/g,'%27')+'\')"'):'';
-    return '<a class="nart" href="'+nesc(it.link)+'" target="_blank" rel="noopener"><div class="nart-img"'+style+'>'+(img?'':'🗞')+'</div><div class="nart-b"><div class="nart-meta">'+fmtNewsDate(it.pubDate)+'</div><h3>'+nesc(it.title)+'</h3><div class="nart-src">'+nesc(src)+' ↗</div></div></a>';
-  }).join('');
-}
-
-var GUIDE=[
- {k:'fastest-cars',t:'Fastest-Selling Cars This Year',m:'fastest',g:'general'},
- {k:'reliable-cars',t:'Most Reliable Cars of 2026',m:'reliable',g:'general'},
- {k:'best-small',t:'Best-Selling Small Cars',m:'best',g:'general'},
- {k:'best-midsize',t:'Best-Selling Midsize Cars',m:'best',g:'general'},
- {k:'best-midsuv',t:'Best-Selling Midsize SUVs',m:'best',g:'general'},
- {k:'best-fullsuv',t:'Best-Selling Full-Size SUVs',m:'best',g:'general'},
- {k:'best-smalltruck',t:'Best-Selling Small/Midsize Trucks',m:'best',g:'general'},
- {k:'best-fulltruck',t:'Best-Selling Full-Size Trucks',m:'best',g:'general'},
- {k:'lux-fastest',t:'Fastest-Selling Luxury Cars',m:'fastest',g:'luxury'},
- {k:'lux-reliable',t:'Most Reliable Luxury Cars of 2026',m:'reliable',g:'luxury'},
- {k:'lux-small',t:'Best-Selling Luxury Small Cars',m:'best',g:'luxury'},
- {k:'lux-midsize',t:'Best-Selling Luxury Midsize Cars',m:'best',g:'luxury'},
- {k:'lux-midsuv',t:'Best-Selling Luxury Midsize SUVs',m:'best',g:'luxury'},
- {k:'lux-fullsuv',t:'Best-Selling Luxury Full-Size SUVs',m:'best',g:'luxury'},
- {k:'lux-smalltruck',t:'Best-Selling Luxury Small/Midsize Trucks',m:'best',g:'luxury'},
- {k:'lux-fulltruck',t:'Best-Selling Luxury Full-Size Trucks',m:'best',g:'luxury'}
-];
-var METRIC_LABEL={fastest:'Fastest-selling · days to sell',best:'Best-selling · sales volume',reliable:'Most reliable · reliability studies'};
-function buildGuide(){
-  var gen=document.getElementById('guideGeneral'), lux=document.getElementById('guideLuxury'); if(!gen||!lux)return;
-  function card(x){return '<button class="gcard" onclick="openGuide(\''+x.k+'\')"><span class="gcard-t">'+nesc(x.t)+'</span><span class="gcard-m">'+METRIC_LABEL[x.m]+'</span><span class="gcard-go">See latest coverage →</span></button>';}
-  gen.innerHTML=GUIDE.filter(function(x){return x.g==='general';}).map(card).join('');
-  lux.innerHTML=GUIDE.filter(function(x){return x.g==='luxury';}).map(card).join('');
-  var modal=document.getElementById('guideModal'); if(modal && !modal.__wired){ modal.__wired=true; modal.addEventListener('click',closeGuide); }
-}
-async function openGuide(cat){
-  var modal=document.getElementById('guideModal'); if(!modal)return;
-  var meta=GUIDE.filter(function(x){return x.k===cat;})[0]||{};
-  document.getElementById('gmMetric').textContent=METRIC_LABEL[meta.m]||'';
-  document.getElementById('gmTitle').textContent=meta.t||'Rankings';
-  document.getElementById('gmSub').textContent='Reporting year 2026';
-  document.getElementById('gmBody').innerHTML='<p class="note">Loading the latest published rankings…</p>';
-  modal.classList.remove('hidden');
+  var feat=document.getElementById('newsFeature'), state=document.getElementById('newsState'), foot=document.getElementById('newsFoot');
+  var reqId=++NEWS_REQ;
+  if(force || !grid.children.length){ if(feat)feat.style.display='none'; grid.innerHTML=''; if(foot)foot.style.display='none'; if(state){state.style.display='block';state.className='news-state';state.textContent='Loading the latest headlines…';} }
   try{
-    var r=await fetch('/api/news?cat='+encodeURIComponent(cat)); var j=await r.json();
-    renderGuide(j, meta);
-  }catch(e){ console.error('guide load failed',e); document.getElementById('gmBody').innerHTML='<p class="note">We could not load rankings right now. Please try again shortly.</p>'; }
+    var r=await fetch('/api/news?cat='+encodeURIComponent(NEWS_CAT),{headers:{'Accept':'application/json'}});
+    var j=await r.json();
+    if(reqId!==NEWS_REQ) return;
+    var items=(j&&j.items&&j.items.length)?j.items.slice():[];
+    if(!items.length){
+      grid.innerHTML=''; if(feat)feat.style.display='none'; if(foot)foot.style.display='none';
+      if(state){ state.style.display='block'; state.className='news-state';
+        state.textContent='No recent articles in this category right now \u2014 try another tab.'; }
+      return;
+    }
+    items.sort(function(a,b){var da=Date.parse(a.pubDate)||0,db=Date.parse(b.pubDate)||0;return db-da;});
+    renderNews(items);
+    if(state)state.style.display='none';
+    if(foot)foot.style.display='block';
+  }catch(e){
+    if(reqId!==NEWS_REQ) return;
+    console.error('news load failed', e&&e.message);
+    grid.innerHTML=''; if(feat)feat.style.display='none'; if(foot)foot.style.display='none';
+    if(state){ state.style.display='block'; state.className='news-state news-error';
+      state.innerHTML='<strong>Live automotive news is temporarily unavailable.</strong><br>Please check back shortly — we only show real, published headlines.'; }
+  }
 }
-function closeGuide(){var m=document.getElementById('guideModal'); if(m)m.classList.add('hidden');}
-function renderGuide(j, meta){
-  var body=document.getElementById('gmBody'); if(!body)return;
-  if(!j||!j.items||!j.items.length){ body.innerHTML='<p class="note">No current published ranking is available for this category right now. We only pull from live automotive news sources, and never show a made-up list. Check back soon, or <a href="#" onclick="closeGuide();requestVehicleHelp();return false;" style="color:var(--teal-d);font-weight:700">ask us to help you research it</a>.</p>'; return; }
-  var upd=j.updated?('Updated '+fmtNewsDate(j.updated)):'';
-  var sub=document.getElementById('gmSub'); if(sub)sub.textContent='Reporting year '+(j.year||2026)+(upd?(' · '+upd):'');
-  body.innerHTML='<p class="note" style="margin-bottom:10px">Latest articles and research on this topic from automotive news sources. Each source reports its own ranking — open an article to see the list, figures, and reporting date. These are source articles, not a single verified ranking.</p>'+
-   j.items.map(function(it){var img=it.image?(' style="background-image:url(\''+String(it.image).replace(/'/g,'%27')+'\')"'):'';
-     return '<a class="gitem" href="'+nesc(it.link)+'" target="_blank" rel="noopener"><div class="gitem-img"'+img+'>'+(it.image?'':'📰')+'</div><div class="gitem-b"><h4>'+nesc(it.title)+'</h4><div class="gitem-meta">'+nesc(it.source||'Source')+(it.pubDate?(' · '+fmtNewsDate(it.pubDate)):'')+' ↗</div></div></a>';
-   }).join('');
+function newsCard(it){
+  var img=newsImg(it), src=it.source||'Auto News';
+  var style=img?(' style="background-image:url(\''+String(img).replace(/'/g,'%27')+'\')"'):'';
+  return '<a class="nart" href="'+nesc(it.link)+'" target="_blank" rel="noopener">'+
+    '<div class="nart-img"'+style+'>'+(img?'':'🗞')+'</div>'+
+    '<div class="nart-b"><div class="nart-meta">'+nesc(src)+(it.pubDate?(' · '+fmtNewsDate(it.pubDate)):'')+'</div>'+
+    '<h3>'+nesc(it.title)+'</h3>'+
+    (it.summary?('<p class="nart-sum">'+nesc(it.summary)+'</p>'):'')+
+    '<div class="nart-src">Read article ↗</div></div></a>';
 }
+function renderNews(items){
+  var feat=document.getElementById('newsFeature'), grid=document.getElementById('newsGrid'); if(!grid)return;
+  // Fill all 7 visible slots (featured + 6) with photographed articles first, keeping newest-first
+  // within each group. Articles without a photo appear only if the category has fewer than 7 with one.
+  var withImg=[], noImg=[];
+  for(var i=0;i<items.length;i++){ (newsImg(items[i])?withImg:noImg).push(items[i]); }
+  var ordered=withImg.concat(noImg);
+  var f=ordered[0], rest=ordered.slice(1,7);
+  if(feat && f){
+    var fimg=newsImg(f), fstyle=fimg?(' style="background-image:url(\''+String(fimg).replace(/'/g,'%27')+'\')"'):'';
+    feat.href=f.link||'#'; feat.style.display='';
+    feat.innerHTML='<div class="nf-img"'+fstyle+'>'+(fimg?'':'🗞')+'</div>'+
+      '<div class="nf-b"><div class="nart-meta">'+nesc(f.source||'Auto News')+(f.pubDate?(' · '+fmtNewsDate(f.pubDate)):'')+'</div>'+
+      '<h3>'+nesc(f.title)+'</h3>'+
+      (f.summary?('<p class="nf-sum">'+nesc(f.summary)+'</p>'):'')+
+      '<div class="nart-src">Read at '+nesc(f.source||'the publisher')+' ↗</div></div>';
+  }
+  grid.innerHTML=rest.map(newsCard).join('');
+}
+function startNews(){ if(NEWS_STARTED)return; NEWS_STARTED=true; loadNews(true); if(NEWS_TIMER)clearInterval(NEWS_TIMER); NEWS_TIMER=setInterval(function(){ loadNews(false); }, 600000); }
 
 let selectedCar=null;
 function openCar(idx){
@@ -882,7 +889,7 @@ document.getElementById('form-sell').addEventListener('submit',async(e)=>{
 })();
 /* initial data load (runs after all declarations are initialized) */
 try{ loadInventory(); }catch(e){ console.error(e); }
-try{ buildGuide(); }catch(e){ console.error(e); }
+try{ startNews(); }catch(e){ console.error(e); }
 </script>
 </body>
 </html>
