@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Car Scout v1.11 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
+<title>The Car Scout v1.12 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -296,7 +296,7 @@ footer{background:#061725;margin-top:0}
 .ins-add:hover{background:#fdeecb;border-color:var(--teal-d)}
 </style>
 </head>
-<!-- The Car Scout — Build v1.11 -->
+<!-- The Car Scout — Build v1.12 -->
 <body>
 
 <header>
@@ -444,17 +444,28 @@ footer{background:#061725;margin-top:0}
   <div class="section"><div class="wrap"><div class="card card-narrow">
     <form id="form-refi" novalidate>
       <div class="grid">
-        <div class="sub">Your Info</div>
-        <div class="field"><label>Full Name <span class="req">*</span></label><input name="name" required></div>
-        <div class="field"><label>Phone <span class="req">*</span></label><input name="phone" type="tel" placeholder="(317) 555-0100"></div>
-        <div class="field full"><label>Email <span class="req">*</span></label><input name="email" type="email" placeholder="you@email.com"></div>
-        <div class="sub">Your Current Loan</div>
-        <div class="field"><label>Current Loan Balance</label><input name="balance" inputmode="decimal" placeholder="$"></div>
-        <div class="field"><label>Current Rate (APR %)</label><input name="currentApr" inputmode="decimal" placeholder="e.g. 14.9"></div>
-        <div class="field"><label>Target New Rate (APR %)</label><input name="newApr" inputmode="decimal" placeholder="optional"></div>
-        <div class="field"><label>Monthly Savings Goal</label><input name="monthlySavings" inputmode="decimal" placeholder="$ optional"></div>
+        <div class="sub">Personal Information</div>
+        <div class="field"><label>First Name <span class="req">*</span></label><input name="firstName"></div>
+        <div class="field"><label>Last Name <span class="req">*</span></label><input name="lastName"></div>
+        <div class="field"><label>Phone Number <span class="req">*</span></label><input name="phone" type="tel" placeholder="(317) 555-0100"></div>
+        <div class="field full"><label>Email Address <span class="req">*</span></label><input name="email" type="email" placeholder="you@email.com"></div>
       </div>
-      <div class="foot"><button type="submit" class="btn btn-lg">Check My Savings</button><span class="note">Soft inquiry to start — won't hurt your credit.</span></div>
+      <div class="grid">
+        <div class="sub">Current Vehicle &amp; Loan Information</div>
+        <div class="field"><label>Vehicle Year <span class="req">*</span></label><input name="year" inputmode="numeric" placeholder="2021"></div>
+        <div class="field"><label>Vehicle Make <span class="req">*</span></label><input name="make" placeholder="Honda"></div>
+        <div class="field"><label>Vehicle Model <span class="req">*</span></label><input name="model" placeholder="Accord"></div>
+        <div class="field"><label>VIN</label><input name="vin" placeholder="optional" maxlength="17" style="text-transform:uppercase"></div>
+        <div class="field"><label>Current Loan Balance <span class="req">*</span></label><input name="balance" inputmode="decimal" placeholder="$" onblur="refiMoney(this)"></div>
+        <div class="field"><label>Current Interest Rate (APR %) <span class="req">*</span></label><input name="currentApr" inputmode="decimal" placeholder="e.g. 14.9"></div>
+        <div class="field"><label>Current Monthly Payment <span class="req">*</span></label><input name="currentPayment" inputmode="decimal" placeholder="$" onblur="refiMoney(this)"></div>
+        <div class="field"><label>How Long Have You Had the Vehicle? <span class="req">*</span></label><select name="ownershipDuration"><option value="">Select&hellip;</option><option>Less than 6 months</option><option>6–11 months</option><option>1–2 years</option><option>3–4 years</option><option>5+ years</option></select></div>
+      </div>
+      <div class="grid">
+        <div class="sub">Credit Information</div>
+        <div class="field full"><label>What is your estimated credit score? <span class="req">*</span></label><select name="creditScoreRange"><option value="">Select&hellip;</option><option>800–850 — Exceptional</option><option>740–799 — Very Good</option><option>670–739 — Good</option><option>580–669 — Fair</option><option>300–579 — Poor</option><option>I’m Not Sure</option></select></div>
+      </div>
+      <div class="foot"><button type="submit" class="btn btn-lg">Check My Savings</button><span class="note">No credit check to start &mdash; submitting won&rsquo;t affect your credit score.</span></div>
       <div class="msg" id="msg-refi"></div>
     </form>
     <div class="ok-panel" id="ok-refi"><div class="big">✓</div><h3>On it!</h3><p>We'll review your loan and reach out with your refinance options.</p><button class="btn btn-ghost" onclick="resetForm('refi')">Submit another</button></div>
@@ -686,7 +697,7 @@ function resetForm(kind){document.getElementById('ok-'+kind).style.display='none
    Shop/Value/Insurance ride 'help' with a clearly labeled note so they're identifiable in the CRM. */
 const TOOLS={
   financing:{type:'credit', build:d=>{var o=Object.assign({},d);o.creditConsent=(d.creditConsent==='agreed');o.consentDisclosureVersion='CS-CREDIT-COMM-CONSENT-2026-10-31';o.consentTimestamp=new Date().toISOString();return o;}},
-  refi:{type:'refinance', build:d=>d},
+  refi:{type:'refinance', build:d=>{var o=Object.assign({},d);o.name=((d.firstName||'')+' '+(d.lastName||'')).trim();o.vin=d.vin||'';return o;}},
   insurance:{type:'help', build:d=>({name:d.name,phone:d.phone,email:d.email,vehicle:d.i_vehicle||'',lookingFor:'INSURANCE QUOTE — '+[d.i_coverage,d.i_current&&('current: '+d.i_current)].filter(Boolean).join(' · '),message:d.i_notes||''})}
 };
 function validateCreditApp(form){
@@ -714,6 +725,26 @@ function validateCreditApp(form){
   ['rentMortgageAmount','monthlyIncome','downPayment'].forEach(function(n){ check(n, function(v){ var c=String(v).replace(/[,$\s]/g,''); return /^\d+(\.\d{1,2})?$/.test(c); }, 'Enter a valid dollar amount'); });
   return problems;
 }
+function refiMoney(el){ var raw=String(el.value).replace(/[,$\s]/g,''); if(raw===''){return;} var n=Number(raw); if(!isNaN(n)){ el.value='$'+n.toLocaleString('en-US',{maximumFractionDigits:2}); } }
+function validateRefi(form){
+  var problems=[];
+  function add(el,msg){ if(el)el.classList.add('field-err'); problems.push({el:el||null,msg:msg}); }
+  function q(n){ return form.querySelector('[name="'+n+'"]'); }
+  function need(n,msg){ var e=q(n); if(!e||!String(e.value).trim()){ add(e,msg); return false;} return true; }
+  need('firstName','Enter your first name');
+  need('lastName','Enter your last name');
+  var ph=q('phone'); if(!/^\d{10}$/.test(String(ph.value).replace(/\D/g,''))) add(ph,'Enter a valid 10-digit phone number');
+  var em=q('email'); if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(em.value).trim())) add(em,'Enter a valid email address');
+  var y=q('year'); var yn=parseInt(y.value,10); var ymax=new Date().getFullYear()+2; if(!/^\d{4}$/.test(String(y.value).trim())||yn<1900||yn>ymax) add(y,'Enter a valid vehicle year');
+  need('make','Enter the vehicle make');
+  need('model','Enter the vehicle model');
+  var bal=q('balance'); var bn=Number(String(bal.value).replace(/[,$\s]/g,'')); if(String(bal.value).trim()===''||isNaN(bn)||bn<=0) add(bal,'Enter a valid current loan balance');
+  var apr=q('currentApr'); var an=Number(String(apr.value).replace(/[%\s]/g,'')); if(String(apr.value).trim()===''||isNaN(an)||an<0||an>=100) add(apr,'Enter a valid current interest rate (APR %)');
+  var pay=q('currentPayment'); var pn=Number(String(pay.value).replace(/[,$\s]/g,'')); if(String(pay.value).trim()===''||isNaN(pn)||pn<=0) add(pay,'Enter a valid current monthly payment');
+  need('ownershipDuration','Select how long you have had the vehicle');
+  need('creditScoreRange','Select your estimated credit score');
+  return problems;
+}
 function wire(kind){
   const form=document.getElementById('form-'+kind);const cfg=TOOLS[kind];
   form.addEventListener('submit',async(e)=>{
@@ -725,6 +756,9 @@ function wire(kind){
       if(_probs.length){ var _fm=_probs[0].msg||'Please complete all required fields'; msg.className='msg err'; msg.textContent=_probs.length>1?(_fm+' — '+_probs.length+' field(s) need attention.'):(_fm+'.'); _probs[0].el.scrollIntoView({behavior:'smooth',block:'center'}); try{_probs[0].el.focus({preventScroll:true});}catch(e){} return; }
       var _cc=form.querySelector('[name="creditConsent"]');
       if(!_cc || !_cc.checked){ msg.className='msg err'; msg.textContent='Please check the authorization box to consent to the credit inquiry before submitting.'; try{_cc.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){} return; }
+    } else if(kind==='refi'){
+      var _rp=validateRefi(form);
+      if(_rp.length){ var _rf=null; for(var _i=0;_i<_rp.length;_i++){ if(_rp[_i].el){_rf=_rp[_i];break;} } if(!_rf)_rf=_rp[0]; msg.className='msg err'; msg.textContent=(_rf.msg||'Please complete all required fields')+(_rp.length>1?(' — '+_rp.length+' field(s) need attention.'):'.'); if(_rf.el){ _rf.el.scrollIntoView({behavior:'smooth',block:'center'}); try{_rf.el.focus({preventScroll:true});}catch(e){} } return; }
     } else {
       if(!data.phone && !data.email){msg.className='msg err';msg.textContent='Please add a phone number or email so we can reach you.';return;}
       if(!(data.name||data.firstName)){msg.className='msg err';msg.textContent='Please enter your name.';return;}
@@ -737,7 +771,7 @@ function wire(kind){
   });
 }
 ['financing','refi'].forEach(wire);
-(function(){var ff=document.getElementById('form-financing'); if(ff){ ff.addEventListener('input',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); }); ff.addEventListener('change',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); }); }})();
+(function(){var ff=document.getElementById('form-financing'); if(ff){ ff.addEventListener('input',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); }); ff.addEventListener('change',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); }); } var rf=document.getElementById('form-refi'); if(rf){ rf.addEventListener('input',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); }); rf.addEventListener('change',function(e){ if(e.target&&e.target.classList)e.target.classList.remove('field-err'); }); }})();
 
 /* ===== SHOP: inventory feed (reads Supabase auto_inventory) ===== */
 let INVENTORY=[];let invLoaded=false;
