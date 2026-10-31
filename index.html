@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Car Scout v1.3 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
+<title>The Car Scout v1.8 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -248,9 +248,16 @@ footer{background:#061725;margin-top:0}
 .gitem-meta{font-size:12px;color:var(--muted);font-weight:600}
 @media(max-width:900px){.guide-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.guide-grid{grid-template-columns:1fr}.gitem-img{flex-basis:76px;width:76px;height:54px}}
+.cs-consent{margin:22px 0 4px;padding-top:18px;border-top:1px solid var(--line)}
+.cs-consent-h{font-weight:700;color:var(--navy);font-size:12.5px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.cs-consent-body{font-size:12px;line-height:1.5;color:var(--muted)}
+.cs-consent-body p{margin:0 0 8px}
+.cs-consent-body p:last-child{margin-bottom:0}
+.cs-consent-check{display:flex;gap:10px;align-items:flex-start;margin-top:15px;font-size:13px;line-height:1.45;color:var(--navy);font-weight:600;cursor:pointer}
+.cs-consent-check input{margin-top:1px;width:18px;height:18px;flex:0 0 auto;cursor:pointer;accent-color:var(--teal)}
 </style>
 </head>
-<!-- The Car Scout — Build v1.3 -->
+<!-- The Car Scout — Build v1.8 -->
 <body>
 
 <header>
@@ -512,6 +519,8 @@ footer{background:#061725;margin-top:0}
         <div class="sub">The Deal</div>
         <div class="field"><label>Down Payment <span class="req">*</span></label><input name="downPayment" inputmode="decimal" placeholder="$"></div>
       </div>
+      
+      <div class="cs-consent"><div class="cs-consent-h">Credit Application Authorization &amp; Communication Consent</div><div class="cs-consent-body"><p>By clicking "Submit", I provide my express written signature certifying that I am at least 18 years old and authorize The Car Scout and its network of participating auto dealership partners to obtain my consumer credit report from one or more consumer reporting agencies (such as Experian, Equifax, or TransUnion) to evaluate my creditworthiness for an automotive loan. I understand that this credit inquiry may impact my credit score.</p><p>Furthermore, I grant my prior express written consent to receive marketing and sales phone calls, text messages (SMS/MMS), and prerecorded or artificial voice messages from The Car Scout and any dealership partner to whom my application is matched. I understand these communications may be initiated phone calls even if my number is listed on a state or national Do Not Call registry. I acknowledge that consent is not a condition of purchasing any property, goods, or services. Message and data rates may apply, and I may opt out at any time by replying "STOP".</p><p>I agree to the Terms of Service and Privacy Policy, and authorize the secure transmission of my application data, including my non-public personal information, to participating dealers to process my request.</p></div><label class="cs-consent-check"><input type="checkbox" name="creditConsent" value="agreed"><span>I have read and agree to the Credit Application Authorization &amp; Communication Consent above. <span class="req">*</span></span></label></div>
       <div class="foot"><button type="submit" class="btn btn-lg">Submit Application</button><span class="note">🔒 Encrypted and only used to process your financing.</span></div>
       <div class="msg" id="msg-financing"></div>
     </form>
@@ -524,7 +533,7 @@ footer{background:#061725;margin-top:0}
   <div class="page-hero"><div class="wrap"><div class="eyebrow">FAQ</div><h1>Questions, answered</h1></div></div>
   <div class="section"><div class="wrap" style="max-width:820px">
     <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Does filling out a form cost anything?<span class="pm">+</span></div><div class="faq-a">No. Every tool on The Car Scout is free to use. You only ever pay if you choose to move forward on a deal.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Will applying hurt my credit?<span class="pm">+</span></div><div class="faq-a">Getting started is a soft inquiry and won't affect your score. A hard inquiry only happens with your permission once you're ready to move forward.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Will applying for financing affect my credit score?<span class="pm">+</span></div><div class="faq-a">Yes. Submitting a financing application authorizes a hard credit inquiry by an authorized dealership or financing source reviewing your application. A hard inquiry may affect your credit score. If your application is submitted to multiple financing sources, more than one inquiry may appear on your credit report.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What happens after I submit?<span class="pm">+</span></div><div class="faq-a">Your info comes straight to us and a real person follows up quickly — by phone, text, or email, whichever you prefer.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is my information secure?<span class="pm">+</span></div><div class="faq-a">Yes. Your information is sent over an encrypted connection and is only used to help with your request. We never sell your data.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do you buy cars with a loan still on them?<span class="pm">+</span></div><div class="faq-a">Yes. Just tell us your payoff amount on the Sell My Car form and we'll handle the rest.</div></div>
@@ -592,7 +601,7 @@ function resetForm(kind){document.getElementById('ok-'+kind).style.display='none
 /* each tool -> (CRM type, payload builder). CRM accepts credit/sell/refinance/help.
    Shop/Value/Insurance ride 'help' with a clearly labeled note so they're identifiable in the CRM. */
 const TOOLS={
-  financing:{type:'credit', build:d=>d},
+  financing:{type:'credit', build:d=>{var o=Object.assign({},d);o.creditConsent=(d.creditConsent==='agreed');o.consentDisclosureVersion='CS-CREDIT-COMM-CONSENT-2026-10-31';o.consentTimestamp=new Date().toISOString();return o;}},
   refi:{type:'refinance', build:d=>d},
   insurance:{type:'help', build:d=>({name:d.name,phone:d.phone,email:d.email,vehicle:d.i_vehicle||'',lookingFor:'INSURANCE QUOTE — '+[d.i_coverage,d.i_current&&('current: '+d.i_current)].filter(Boolean).join(' · '),message:d.i_notes||''})}
 };
@@ -630,6 +639,8 @@ function wire(kind){
     if(kind==='financing'){
       var _probs=validateCreditApp(form);
       if(_probs.length){ var _fm=_probs[0].msg||'Please complete all required fields'; msg.className='msg err'; msg.textContent=_probs.length>1?(_fm+' — '+_probs.length+' field(s) need attention.'):(_fm+'.'); _probs[0].el.scrollIntoView({behavior:'smooth',block:'center'}); try{_probs[0].el.focus({preventScroll:true});}catch(e){} return; }
+      var _cc=form.querySelector('[name="creditConsent"]');
+      if(!_cc || !_cc.checked){ msg.className='msg err'; msg.textContent='Please check the authorization box to consent to the credit inquiry before submitting.'; try{_cc.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){} return; }
     } else {
       if(!data.phone && !data.email){msg.className='msg err';msg.textContent='Please add a phone number or email so we can reach you.';return;}
       if(!(data.name||data.firstName)){msg.className='msg err';msg.textContent='Please enter your name.';return;}
