@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Car Scout v1.9.2 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
+<title>The Car Scout v1.9.4 — Shop, Value, Refinance, Sell, Insure &amp; Finance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -165,7 +165,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;box-shadow:none}
 .btn-ghost{border:1px solid #d0d5dd;background:#fff;color:#344054}
 .menu-btn{color:var(--navy)}
 .hero{background:#f4f6f8;color:var(--ink);padding:78px 0 72px;border-bottom:1px solid #e4e7ec;position:relative;overflow:hidden}
-.hero:after{content:"";position:absolute;right:-8%;bottom:-55%;width:52%;height:130%;border-radius:50%;background:linear-gradient(145deg,#dce4ea,#eef2f5);opacity:.8}
+.hero:after{content:"";position:absolute;right:-8%;bottom:-55%;width:52%;height:130%;border-radius:50%;background:linear-gradient(145deg,#dce4ea,#eef2f5);opacity:.8;z-index:0}
 .hero .wrap{position:relative;z-index:2}
 .hero .eyebrow{color:#8a5b00;font-size:12px}
 .hero h1{font-size:clamp(44px,6vw,70px);max-width:13ch;letter-spacing:-.045em}
@@ -270,9 +270,24 @@ footer{background:#061725;margin-top:0}
 .news-state{padding:44px 20px;text-align:center;color:var(--muted);font-size:14px;line-height:1.6;border:1px dashed var(--line);border-radius:12px;background:var(--surface)}
 .news-state.news-error{border-color:#f1c0bb;background:#fef5f4;color:#9a3a32}
 @media(max-width:760px){.news-feature{grid-template-columns:1fr}.nf-img{min-height:0;aspect-ratio:16/9}.nf-b{padding:18px 18px 22px}.nf-b h3{font-size:20px}}
+.hero .wrap{position:relative;z-index:1}
+.hero-story{margin-top:30px;max-width:560px;text-align:center}
+.hs-k{font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
+.hs-h{font-size:20px;line-height:1.26;color:var(--navy);font-weight:800;margin:0 0 11px}
+.hs-p{font-size:13.5px;line-height:1.6;color:var(--muted);margin:0 auto 20px;max-width:460px}
+.hs-icons{display:flex;justify-content:center;gap:14px;margin-bottom:18px}
+.hs-ic{display:flex;flex-direction:column;align-items:center;gap:9px;font-size:12px;font-weight:700;color:var(--navy);line-height:1.3;flex:1;max-width:110px}
+.hs-ic-badge{width:46px;height:46px;border-radius:50%;background:rgba(245,158,11,.12);display:grid;place-items:center;color:var(--amber)}
+.hs-ic-badge svg{width:22px;height:22px}
+.hs-tag{display:inline-flex;align-items:center;gap:11px;font-size:16px;font-weight:800;color:var(--navy)}
+.hs-tag:before,.hs-tag:after{content:"";width:20px;height:2px;background:var(--amber);border-radius:2px}
+@media(min-width:1200px){
+  .hero-story{position:absolute;top:50%;right:8px;transform:translateY(-50%);width:362px;max-width:40%;margin-top:0}
+  .hs-p{max-width:none}
+}
 </style>
 </head>
-<!-- The Car Scout — Build v1.9.2 -->
+<!-- The Car Scout — Build v1.9.4 -->
 <body>
 
 <header>
@@ -305,6 +320,17 @@ footer{background:#061725;margin-top:0}
         <div class="s"><b>6</b><span>Ways we help</span></div>
         <div class="s"><b>Fast</b><span>Real human follow-up</span></div>
         <div class="s"><b>Free</b><span>No cost to start</span></div>
+      </div>
+      <div class="hero-story">
+        <div class="hs-k">The Car Scout Story</div>
+        <h2 class="hs-h">Built for Car Buyers Who Want a Better Experience</h2>
+        <p class="hs-p">The Car Scout was created to take the stress out of buying, selling, and financing a vehicle. We give you the tools, market insights, and real options to make confident decisions &mdash; all in one place.</p>
+        <div class="hs-icons">
+          <div class="hs-ic"><span class="hs-ic-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span><span>Search Smarter</span></div>
+          <div class="hs-ic"><span class="hs-ic-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg></span><span>Finance Confidently</span></div>
+          <div class="hs-ic"><span class="hs-ic-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"></path></svg></span><span>Drive Protected</span></div>
+        </div>
+        <div class="hs-tag">We Scout, You Drive.</div>
       </div>
     </div>
   </div>
